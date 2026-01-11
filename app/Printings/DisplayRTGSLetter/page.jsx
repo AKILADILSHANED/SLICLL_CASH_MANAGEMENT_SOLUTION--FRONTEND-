@@ -178,13 +178,13 @@ function RTGCLetterContent() {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2
                                 })})</label>
-                                {" "} from {letterData.fromBank}, {letterData.fromBranch} A/C No. <label className='font-bold'>{letterData.fromAccount}</label> to {letterData.toBank}, {letterData.toBranch} A/C No. <label className='font-bold'>{letterData.toAccount}</label> of Sri Lanka Insurance Corporation General Ltd.
+                                {" "} from {letterData.fromBank}, {letterData.fromBranch} A/C No. <label className='font-bold'>{letterData.fromAccount}</label> to {letterData.toBank}, {letterData.toBranch} A/C No. <label className='font-bold'>{letterData.toAccount}</label> of Sri Lanka Insurance Corporation Life Ltd.
                                 on <label className='font-bold'>{letterData.valueDate}</label>, under advice to us.
                             </p>
                         </section>
 
                         <section className='mt-12'>
-                            <p>SRI LANKA INSURANCE CORPORATION GENERAL LTD.</p>
+                            <p>SRI LANKA INSURANCE CORPORATION LIFE LTD.</p>
                         </section>
 
                         <section className='mt-20 flex flex-row justify-between'>

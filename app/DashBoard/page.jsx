@@ -396,7 +396,7 @@ const BankLinksCard = () => (
                 { name: "Commercial Bank Online", url: "https://www.commercialbk.com/online/2/2/22001.aspx" },
                 { name: "People's Bank", url: "https://www.digital.peoplesbank.lk/sde.cib.web/IC7Aen6rwhPuCBkeEBEyTg#1" },
                 { name: "Bank of Ceylon", url: "https://online.boc.lk/T001/channel.jsp" },
-                { name: "Sampath Vishwa", url: "https://online.boc.lk/T001/channel.jsp" },
+                { name: "Sampath Vishwa", url: "https://www.sampathvishwa.com/SVCClientWebV2/ActionController" },
                 { name: "Hatton National Bank", url: "https://hnbtxb.com/bib-webapp/app/auth/login" },
                 { name: "Nations Trust Bank", url: "https://hnbtxb.com/bib-webapp/app/auth/login" },
                 { name: "Seylan Bank", url: "https://www.seylanbank.lk/corporate/login" },

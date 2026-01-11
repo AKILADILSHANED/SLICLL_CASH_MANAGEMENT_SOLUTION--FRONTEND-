@@ -85,7 +85,7 @@ export default function IBTSheetPrint() {
 
         // Create Company Name title
         const companyName = document.createElement('h1');
-        companyName.textContent = "Sri Lanka Insurance Corporation General Limited";
+        companyName.textContent = "Sri Lanka Insurance Corporation Life Limited";
         companyName.style.cssText = `
             text-align: center;
             font-size: 24px;

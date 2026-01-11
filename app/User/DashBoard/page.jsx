@@ -461,7 +461,7 @@ export default function DashBoard() {
               )}
             </div>
           ))}
-          <div className="text-slate-400 mt-[80px] text-[12px]">© 2026 SLIC-General. All rights reserved.</div>
+          <div className="text-slate-400 mt-[80px] text-[12px]">© 2026 SLIC-Life. All rights reserved.</div>
         </div>
 
         {/* Main Content */}

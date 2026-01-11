@@ -179,12 +179,12 @@ function RepoLetterContent() {
               </p>
 
               <p className='mt-2'>
-                The investment amount to be debited from our Current Account No.{letterData.bankAccount} of Sri Lanka Insurance Corporation General Ltd.
+                The investment amount to be debited from our Current Account No.{letterData.bankAccount} of Sri Lanka Insurance Corporation Life Ltd.
                 at {letterData.bank}, {letterData.bankBranch} Branch on {letterData.investmentDate}.
               </p>
 
               <p className='mt-2'>
-                Please credit the maturity value to our Current Account No.{letterData.bankAccount + " "}of Sri Lanka Insurance Corporation General Ltd.
+                Please credit the maturity value to our Current Account No.{letterData.bankAccount + " "}of Sri Lanka Insurance Corporation Life Ltd.
                 at {letterData.bank}, {letterData.bankBranch} Branch. If we are not providing the instructions on maturity proceeds, please rollover the above Repo until further notice.
               </p>
 
@@ -194,7 +194,7 @@ function RepoLetterContent() {
             </section>
 
             <section className='mt-4'>
-              <p>SRI LANKA INSURANCE CORPORATION GENERAL LTD.</p>
+              <p>SRI LANKA INSURANCE CORPORATION LIFE LTD.</p>
             </section>
 
             <section className='mt-20 flex flex-row justify-between'>

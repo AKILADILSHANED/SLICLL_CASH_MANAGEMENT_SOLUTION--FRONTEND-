@@ -142,8 +142,8 @@ function VoucherContent() {
                                     </div>
                                 </div>
                                 {/* Bottom Red Part */}
-                                <div className="bg-red-600 p-1 rounded-b-xl">
-                                    <h2 className="text-white text-3xl font-bold text-center">GENERAL</h2>
+                                <div className="bg-yellow-400 p-1 rounded-b-xl">
+                                    <h2 className="text-white text-3xl font-bold text-center">LIFE</h2>
                                 </div>
                             </div>
 
@@ -176,7 +176,7 @@ function VoucherContent() {
                             <div className="grid grid-cols-12 items-baseline">
                                 <span className="col-span-4  text-gray-700">Payee's Name</span>
                                 <span className="col-span-1 text-center">:</span>
-                                <span className="col-span-7 font-medium">The Manager, {voucherData.toBank}, {voucherData.toBranch}, Sri Lanka Insurance Corporation General Ltd. A/C No. {voucherData.toAccount}</span>
+                                <span className="col-span-7 font-medium">The Manager, {voucherData.toBank}, {voucherData.toBranch}, Sri Lanka Insurance Corporation Life Ltd. A/C No. {voucherData.toAccount}</span>
                             </div>
                             <div className="grid grid-cols-12 items-baseline">
                                 <span className="col-span-4  text-gray-700">Payee Address</span>
@@ -198,7 +198,7 @@ function VoucherContent() {
                             <div className="grid grid-cols-12 items-baseline">
                                 <span className="col-span-4  text-gray-700">Description</span>
                                 <span className="col-span-1 text-center">:</span>
-                                <span className="col-span-7 font-medium">Transfer from {voucherData.fromBank}, {voucherData.fromBranch} A/C No. {voucherData.fromAccount} to, {voucherData.toBank}, {voucherData.toBranch} A/C No. {voucherData.toAccount} of Sri Lanka Insurance Corporation General Ltd.</span>
+                                <span className="col-span-7 font-medium">Transfer from {voucherData.fromBank}, {voucherData.fromBranch} A/C No. {voucherData.fromAccount} to, {voucherData.toBank}, {voucherData.toBranch} A/C No. {voucherData.toAccount} of Sri Lanka Insurance Corporation Life Ltd.</span>
                             </div>
                             <div className="grid grid-cols-12 items-baseline">
                                 <span className="col-span-4  text-gray-700">Reference for the Approval</span>

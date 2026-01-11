@@ -120,7 +120,7 @@ export default function UserLogin() {
             <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-transparent mb-2">
               Cash Management Solution
             </h1>
-            <p className="text-blue-100 text-sm md:text-base font-medium">Sri Lanka Insurance Corporation General Ltd.</p>
+            <p className="text-blue-100 text-sm md:text-base font-medium">Sri Lanka Insurance Corporation Life Ltd.</p>
           </div>
         </div>
 
