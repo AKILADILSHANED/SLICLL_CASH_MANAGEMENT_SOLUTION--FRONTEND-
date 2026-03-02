@@ -31,7 +31,7 @@ export default function DeleteAccount({ onCancel }) {
     } else {
       try {
         const request = await fetch(
-          `${baseUrl}/api/v1/bank-account/account-searchForUpdate?accountId=${encodeURIComponent(
+          `${baseUrl}/api/v1/bank-account/account-searchForDelete?accountId=${encodeURIComponent(
             textAccountID
           )}`,
           {
@@ -39,22 +39,16 @@ export default function DeleteAccount({ onCancel }) {
             credentials: "include",
           }
         );
-        if (request.ok) {
-          const response = await request.json();
-          if (response.success == false) {
-            setErrorMessage(response.message);
-          } else {
-            setAccountData(response.responseObject);
-            setAccountDetailsWindow(true);
-          }
+        const response = await request.json();
+        if (request.status === 200) {
+          setAccountData(response.responseObject);
+          setAccountDetailsWindow(true);
         } else {
-          setErrorMessage(
-            "No response from server. Please contact administrator!"
-          );
+          setErrorMessage(response.message);
         }
       } catch (error) {
         setErrorMessage(
-          "Un-expected error occurred while fetching account data. Please contact administrator!"
+          "Response not received fomr server. Please contact administrator!"
         );
       } finally {
         setSpinnerSearch(false);
@@ -76,21 +70,17 @@ export default function DeleteAccount({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setSuccessMessage(response.message);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessage(response.message);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "Response not received fomr server. Please contact administrator!"
       );
     } finally {
       setSpinnerDelete(false);

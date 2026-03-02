@@ -35,16 +35,12 @@ export default function GrantAuthority({ onCancel }) {
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setUserList(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setUserList(response.responseObject);
             } else {
                 setErrorMessage(
-                    "Unable to load Users. Please contact administrator!"
+                    response.message
                 );
             }
         } catch (error) {
@@ -188,17 +184,17 @@ export default function GrantAuthority({ onCancel }) {
                     <div className="flex flex-col md:flex-row md:items-center justify-between">
                         <div className="flex items-center space-x-3 mb-4 md:mb-0">
                             <div className="bg-white/20 p-3 rounded-xl">
-                                <svg 
-                                    className="w-6 h-6 text-white" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24" 
+                                <svg
+                                    className="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth="2" 
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                                     ></path>
                                 </svg>
@@ -217,17 +213,17 @@ export default function GrantAuthority({ onCancel }) {
                             className="px-4 py-2 text-sm font-medium text-white bg-white/20 hover:bg-white/30 
                                      rounded-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm"
                         >
-                            <svg 
-                                className="w-4 h-4" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24" 
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth="2" 
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
                                     d="M6 18L18 6M6 6l12 12"
                                 ></path>
                             </svg>
@@ -236,7 +232,7 @@ export default function GrantAuthority({ onCancel }) {
                     </div>
                 </div>
 
-                
+
 
                 {/* Messages */}
                 {successMessage && (
@@ -260,7 +256,7 @@ export default function GrantAuthority({ onCancel }) {
                         <p className="text-sm text-gray-600 mb-6">
                             Choose a user and module to view available functions for granting
                         </p>
-                        
+
                         <form onSubmit={getAllSubFunctions}>
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                 {/* User Selection */}
@@ -270,17 +266,17 @@ export default function GrantAuthority({ onCancel }) {
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-400" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5 text-gray-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                                                 ></path>
                                             </svg>
@@ -319,17 +315,17 @@ export default function GrantAuthority({ onCancel }) {
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-400" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5 text-gray-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                                                 ></path>
                                             </svg>
@@ -380,17 +376,17 @@ export default function GrantAuthority({ onCancel }) {
                                         </>
                                     ) : (
                                         <>
-                                            <svg 
-                                                className="w-5 h-5" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                                 ></path>
                                             </svg>
@@ -408,17 +404,17 @@ export default function GrantAuthority({ onCancel }) {
                                              active:translate-y-0 shadow-md hover:shadow-lg flex items-center justify-center gap-2
                                              min-w-[140px]"
                                 >
-                                    <svg 
-                                        className="w-5 h-5" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-5 h-5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M6 18L18 6M6 6l12 12"
                                         ></path>
                                     </svg>
@@ -469,7 +465,7 @@ export default function GrantAuthority({ onCancel }) {
                                         </thead>
                                         <tbody className="divide-y divide-gray-200">
                                             {availableFunctionList.map((element, index) => (
-                                                <tr 
+                                                <tr
                                                     key={element.functionId}
                                                     className="hover:bg-gray-50 transition-colors duration-150"
                                                     style={{ animationDelay: `${index * 50}ms` }}
@@ -487,17 +483,17 @@ export default function GrantAuthority({ onCancel }) {
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <div className="flex items-center">
                                                             <div className="bg-purple-100 p-2 rounded-lg mr-3">
-                                                                <svg 
-                                                                    className="w-4 h-4 text-purple-600" 
-                                                                    fill="none" 
-                                                                    stroke="currentColor" 
-                                                                    viewBox="0 0 24 24" 
+                                                                <svg
+                                                                    className="w-4 h-4 text-purple-600"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    viewBox="0 0 24 24"
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                 >
-                                                                    <path 
-                                                                        strokeLinecap="round" 
-                                                                        strokeLinejoin="round" 
-                                                                        strokeWidth="2" 
+                                                                    <path
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                        strokeWidth="2"
                                                                         d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                                                                     ></path>
                                                                 </svg>
@@ -534,17 +530,17 @@ export default function GrantAuthority({ onCancel }) {
                                                                 </>
                                                             ) : (
                                                                 <>
-                                                                    <svg 
-                                                                        className="w-5 h-5" 
-                                                                        fill="none" 
-                                                                        stroke="currentColor" 
-                                                                        viewBox="0 0 24 24" 
+                                                                    <svg
+                                                                        className="w-5 h-5"
+                                                                        fill="none"
+                                                                        stroke="currentColor"
+                                                                        viewBox="0 0 24 24"
                                                                         xmlns="http://www.w3.org/2000/svg"
                                                                     >
-                                                                        <path 
-                                                                            strokeLinecap="round" 
-                                                                            strokeLinejoin="round" 
-                                                                            strokeWidth="2" 
+                                                                        <path
+                                                                            strokeLinecap="round"
+                                                                            strokeLinejoin="round"
+                                                                            strokeWidth="2"
                                                                             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                                                                         ></path>
                                                                     </svg>
@@ -567,17 +563,17 @@ export default function GrantAuthority({ onCancel }) {
                         <div className="mt-8 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl shadow-lg p-8 text-center animate-fadeIn">
                             <div className="max-w-md mx-auto">
                                 <div className="bg-gradient-to-r from-green-100 to-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                    <svg 
-                                        className="w-8 h-8 text-green-600" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-8 h-8 text-green-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                                         ></path>
                                     </svg>
@@ -600,17 +596,17 @@ export default function GrantAuthority({ onCancel }) {
                         <div className="mt-8 bg-white border border-gray-200 rounded-xl shadow-lg p-8 text-center">
                             <div className="max-w-md mx-auto">
                                 <div className="bg-gradient-to-r from-blue-100 to-purple-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                    <svg 
-                                        className="w-8 h-8 text-blue-600" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-8 h-8 text-blue-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
                                         ></path>
                                     </svg>

@@ -44,22 +44,18 @@ export default function DeleteRequest({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setRequestDetailsWindow(true);
-          setFundRequestData(response.responseObject);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setRequestDetailsWindow(true);
+        setFundRequestData(response.responseObject);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Unexpected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     } finally {
       setSearchSpinner(false);
@@ -86,30 +82,25 @@ export default function DeleteRequest({ onCancel }) {
           credentials: "include"
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-          setConfirmDelete(false);
-        } else {
-          setSuccessMessage(response.message);
-          setRequestDetailsWindow(false);
-          setSearchedRequestId("");
-          setSearchedRequestType("");
-          setConfirmDelete(false);
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessage(response.message);
+        setRequestDetailsWindow(false);
+        setSearchedRequestId("");
+        setSearchedRequestType("");
+        setConfirmDelete(false);
 
-          // Auto-hide success message after 5 seconds
-          setTimeout(() => {
-            setSuccessMessage("");
-          }, 5000);
-        }
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
       } else {
-        setErrorMessage("No response from server. Please contact administrator!");
+        setErrorMessage(response.message);
         setConfirmDelete(false);
       }
     } catch (error) {
       setErrorMessage(
-        "Unexpected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
       setConfirmDelete(false);
     } finally {

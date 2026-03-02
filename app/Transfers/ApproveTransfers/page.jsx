@@ -33,8 +33,8 @@ export default function ApproveTransfers() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 const transfers = response.responseObject || [];
                 setApproveList(transfers);
                 setTotalPending(transfers.length);
@@ -45,12 +45,10 @@ export default function ApproveTransfers() {
                 }, 0);
                 setTotalAmount(total);
             } else {
-                const response = await request.json();
                 setErrorMessage(response.message || "Failed to load approval list");
             }
         } catch (error) {
-            alert(error)
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setLoading(false);
         }
@@ -72,8 +70,8 @@ export default function ApproveTransfers() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 await getTransferForApproving();
                 setSuccessMessage(response.message);
 
@@ -82,12 +80,11 @@ export default function ApproveTransfers() {
                     setSuccessMessage("");
                 }, 5000);
             } else {
-                const response = await request.json();
                 setErrorMessage(response.message || "Failed to approve transfer");
             }
         } catch (error) {
             console.log(error);
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setApprovingTransfer(null);
         }
@@ -105,7 +102,7 @@ export default function ApproveTransfers() {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         }).format(number);
-    };    
+    };
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 p-4 md:p-6">

@@ -36,19 +36,17 @@ export default function UserReport() {
                 setFilteredUsers(users);
                 setUserReport(true);
                 setTotalUsers(users.length);
-                
+
                 // Calculate active users
-                const active = users.filter(user => 
+                const active = users.filter(user =>
                     user.status && user.status.toLowerCase() === 'active'
                 ).length;
                 setActiveUsers(active);
-            } else if (request.status === 409) {
-                setErrorMessage(response.message);
             } else {
-                setErrorMessage(response.message || "Failed to load user report");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setloadingMessage(false);
         }
@@ -63,8 +61,8 @@ export default function UserReport() {
             setFilteredUsers(userDetails);
             return;
         }
-        
-        const filtered = userDetails.filter(user => 
+
+        const filtered = userDetails.filter(user =>
             user.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -117,17 +115,17 @@ export default function UserReport() {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <div className="bg-white/20 p-2 rounded-lg">
-                                <svg 
-                                    className="w-6 h-6 text-white" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24" 
+                                <svg
+                                    className="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth="2" 
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5 5.197v-1a6 6 0 00-4.5-5.803"
                                     ></path>
                                 </svg>
@@ -145,17 +143,17 @@ export default function UserReport() {
                             onClick={refreshData}
                             className="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all duration-200 flex items-center space-x-2"
                         >
-                            <svg 
-                                className="w-4 h-4" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24" 
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth="2" 
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
                                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                                 ></path>
                             </svg>
@@ -174,17 +172,17 @@ export default function UserReport() {
                                     <p className="text-3xl font-bold text-blue-900">{totalUsers}</p>
                                 </div>
                                 <div className="bg-blue-200 p-3 rounded-full">
-                                    <svg 
-                                        className="w-6 h-6 text-blue-700" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-6 h-6 text-blue-700"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5 5.197v-1a6 6 0 00-4.5-5.803"
                                         ></path>
                                     </svg>
@@ -199,17 +197,17 @@ export default function UserReport() {
                                     <p className="text-3xl font-bold text-green-900">{activeUsers}</p>
                                 </div>
                                 <div className="bg-green-200 p-3 rounded-full">
-                                    <svg 
-                                        className="w-6 h-6 text-green-700" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-6 h-6 text-green-700"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                         ></path>
                                     </svg>
@@ -224,17 +222,17 @@ export default function UserReport() {
                                     <p className="text-3xl font-bold text-red-900">{totalUsers - activeUsers}</p>
                                 </div>
                                 <div className="bg-red-200 p-3 rounded-full">
-                                    <svg 
-                                        className="w-6 h-6 text-red-700" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-6 h-6 text-red-700"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
                                         ></path>
                                     </svg>
@@ -264,17 +262,17 @@ export default function UserReport() {
 
                     <div className="relative mb-6">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <svg 
-                                className="w-5 h-5 text-gray-400" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24" 
+                            <svg
+                                className="w-5 h-5 text-gray-400"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth="2" 
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                 ></path>
                             </svg>
@@ -293,17 +291,17 @@ export default function UserReport() {
                     {/* Information Banner */}
                     <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4 mb-6">
                         <div className="flex items-start">
-                            <svg 
-                                className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24" 
+                            <svg
+                                className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth="2" 
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
                                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                 ></path>
                             </svg>
@@ -438,17 +436,17 @@ export default function UserReport() {
                                             className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 
                                                      rounded-lg transition-all duration-200 flex items-center gap-2"
                                         >
-                                            <svg 
-                                                className="w-4 h-4" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-4 h-4"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                                                 ></path>
                                             </svg>
@@ -463,17 +461,17 @@ export default function UserReport() {
                         <div className="bg-white border border-gray-200 rounded-xl shadow-lg p-8 text-center">
                             <div className="max-w-md mx-auto">
                                 <div className="bg-gray-50 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                    <svg 
-                                        className="w-8 h-8 text-gray-400" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-8 h-8 text-gray-400"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                         ></path>
                                     </svg>

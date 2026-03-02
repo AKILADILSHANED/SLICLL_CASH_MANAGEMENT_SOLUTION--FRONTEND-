@@ -30,21 +30,17 @@ export default function CreateNewRepo({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setBankAccountList(response.responseObject);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setBankAccountList(response.responseObject);       
       } else {
         setErrorMessage(
-          "Unable to load Account Numbers. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     }
   };
@@ -86,15 +82,14 @@ export default function CreateNewRepo({ onCancel }) {
           )
         }
       );
-      if (!request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status !== 200) {        
         setErrorMessage(response.message);
       } else {
-        const response = await request.json();
         setSuccessMessage(response.message);
       }
     } catch (error) {
-      setErrorMessage("Un-expected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setSaveSpinner(false);
     }

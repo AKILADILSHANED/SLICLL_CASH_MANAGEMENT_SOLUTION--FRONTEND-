@@ -33,20 +33,15 @@ export default function AdjustmentDelete() {
           credentials: "include"
         }
       );
+      const response = await request.json();
       if (request.status === 200) {
-        const response = await request.json();
         setAdjustmentDetails(response.responseObject);
         setAdjustmentDetailsComponent(true);
-      } else if (request.status === 409) {
-        const response = await request.json();
-        setErrorMessage(response.message);
       } else {
-        const response = await request.json();
         setErrorMessage(response.message);
       }
     } catch (error) {
-      console.log(error)
-      setErrorMessage(error + ":Un-expected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setViewSinner(false);
     }
@@ -65,18 +60,14 @@ export default function AdjustmentDelete() {
           credentials: "include"
         }
       );
+      const response = await request.json();
       if (request.status === 200) {
-        const response = await request.json();
         setSuccessMessage(response.message);
-      } else if (request.status == 409) {
-        const response = await request.json();
-        setErrorMessage(response.message);
       } else {
-        const response = await request.json();
         setErrorMessage(response.message);
       }
     } catch (error) {
-      setErrorMessage(error + ":Un-expected error occurred. Please contact administrator!");
+      setErrorMessage("Reponse not received from server. Please contact administrator!");
     } finally {
       setDeleteSinner(false);
     }

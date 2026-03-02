@@ -63,24 +63,20 @@ export default function DisplayBalance() {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          const balances = response.responseObject || [];
+      const response = await request.json();
+      if (request.status === 200) {
+        const balances = response.responseObject || [];
           setBalancesObject(balances);
           setSummaryStats(calculateSummaryStats(balances));
-          setAccountBalanceTable(true);
-        }
+          setAccountBalanceTable(true);        
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "Respond not received from server. Please contact administrator!"
       );
     } finally {
       setSpinner(false);

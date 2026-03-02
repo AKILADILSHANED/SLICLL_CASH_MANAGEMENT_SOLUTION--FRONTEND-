@@ -46,27 +46,23 @@ export default function PaymentRegister({ onCancel }) {
             credentials: "include",
           }
         );
-        if (request.ok) {
-          const response = await request.json();
-          if (response.success == false) {
-            setErrorMessage(response.message);
-          } else {
-            setPaymentData(response.responseObject);
-            setPaymentRegisterDataWindow(true);
-            setSuccessMessage(response.message);
-            // Add the new payment type to suggestions if not already there
-            if (!suggestions.includes(textPaymentType)) {
-              setSuggestions(prev => [textPaymentType, ...prev.slice(0, 7)]);
-            }
+        const response = await request.json();
+        if (request.status === 200) {
+          setPaymentData(response.responseObject);
+          setPaymentRegisterDataWindow(true);
+          setSuccessMessage(response.message);
+          // Add the new payment type to suggestions if not already there
+          if (!suggestions.includes(textPaymentType)) {
+            setSuggestions(prev => [textPaymentType, ...prev.slice(0, 7)]);
           }
         } else {
           setErrorMessage(
-            "No response from server. Please contact administrator!"
+            response.message
           );
         }
       } catch (error) {
         setErrorMessage(
-          "Un-expected error occurred. Please contact administrator!"
+          "No response from server. Please contact administrator!"
         );
       } finally {
         setSpinnerSearch(false);
@@ -323,31 +319,6 @@ export default function PaymentRegister({ onCancel }) {
                 </div>
               </div>
 
-              {/* Information Card */}
-              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                <div className="flex items-start space-x-3">
-                  <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                  </div>
-                  <div>
-                    <h4 className="text-lg font-semibold text-blue-800 mb-2">What's Next?</h4>
-                    <ul className="text-sm text-gray-600 space-y-2">
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-1.5 mr-2"></span>
-                        This payment type is now available for use in transactions
-                      </li>
-                      <li className="flex items-start">
-                        <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-1.5 mr-2"></span>
-                        You can register another payment type or close this window
-                      </li>
-
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
               {/* Action Buttons */}
               <div className="pt-6 border-t border-gray-200">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -375,29 +346,6 @@ export default function PaymentRegister({ onCancel }) {
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Initial State Message */}
-        {!paymentRegisterDataWindow && !successMessage && !errorMessage && (
-          <div className="mt-12 text-center animate-fadeIn">
-            <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-lg p-8 md:p-12 max-w-2xl mx-auto">
-              <div className="bg-blue-50 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">
-                <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
-                </svg>
-              </div>
-              <h3 className="text-xl font-semibold text-gray-800 mb-3">Register Payment Type</h3>
-              <p className="text-gray-600 mb-6 max-w-md mx-auto">
-                Enter a payment type above to register a new payment method in the system. You can type any payment type name you need.
-              </p>
-              <div className="text-sm text-gray-500 flex items-center justify-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <span>Common examples are shown below the input field for reference</span>
               </div>
             </div>
           </div>

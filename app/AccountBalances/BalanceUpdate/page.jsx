@@ -69,27 +69,23 @@ export default function UpdateBalance({ onCancel }) {
             credentials: "include",
           }
         );
-        if (request.ok) {
-          const response = await request.json();
-          if (response.success == false) {
-            setErrorMessage(response.message);
-          } else {
-            setBalanceData(response.responseObject);
-            setBalanceId(response.responseObject.balanceId);
-            setBalanceAmount(response.responseObject.balanceAmount);
-            setOutstandingAmount(response.responseObject.outstandingBalance);
-            setBalanceDisplayWindow(true);
-            setActionState("");
-            setAdjustmentAmount("");
-          }
+        const response = await request.json();
+        if (request.status === 200) {
+          setBalanceData(response.responseObject);
+          setBalanceId(response.responseObject.balanceId);
+          setBalanceAmount(response.responseObject.balanceAmount);
+          setOutstandingAmount(response.responseObject.outstandingBalance);
+          setBalanceDisplayWindow(true);
+          setActionState("");
+          setAdjustmentAmount("");
         } else {
           setErrorMessage(
-            "No response from server. Please contact administrator!"
+            response.message
           );
         }
       } catch (error) {
         setErrorMessage(
-          "Un-expected error occurred. Please contact administrator!"
+          "No response received from server. Please contact administrator!"
         );
       } finally {
         setSpinner(false);
@@ -109,7 +105,6 @@ export default function UpdateBalance({ onCancel }) {
       setErrorMessage("Please select an Adjustment Type!");
       return;
     }
-
     try {
       setSaveSpinner(true);
       const request = await fetch(
@@ -127,27 +122,22 @@ export default function UpdateBalance({ onCancel }) {
           }),
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-
-          setActionState("");
-          setAdjustmentAmount("");
-          setCalculationResult(null);
-          // Refresh the balance data
-          await handleSearch();
-          setSucceessMessage(response.message);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setActionState("");
+        setAdjustmentAmount("");
+        setCalculationResult(null);
+        // Refresh the balance data
+        await handleSearch();
+        setSucceessMessage(response.message);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "No response received from server. Please contact administrator!"
       );
     } finally {
       setSaveSpinner(false);

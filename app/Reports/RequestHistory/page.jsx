@@ -28,18 +28,14 @@ export default function RequestHistory({ onCancel }) {
                 method: "GET",
                 credentials: "include",
             });
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setLoadedPayments(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setLoadedPayments(response.responseObject);
             } else {
-                setErrorMessage("No response from server!");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     };
     useEffect(() => {
@@ -60,11 +56,10 @@ export default function RequestHistory({ onCancel }) {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
-                setErrorMessage(response.message || "Failed to load request history");
+            const response = await request.json();
+            if (request.status !== 200) {                
+                setErrorMessage(response.message);
             } else {
-                const response = await request.json();
                 const requests = response.responseObject || [];
                 setHistoryData(requests);
                 setHistoryTable(true);
@@ -82,7 +77,7 @@ export default function RequestHistory({ onCancel }) {
                 setApprovedRequests(approved);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact the administrator!");
+            setErrorMessage("Response not received from server. Please contact the administrator!");
         } finally {
             setViewSpinner(false);
         }

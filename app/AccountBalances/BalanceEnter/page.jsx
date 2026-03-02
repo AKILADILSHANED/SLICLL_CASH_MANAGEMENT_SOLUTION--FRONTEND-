@@ -108,23 +108,19 @@ export default function EnterBalance() {
           credentials: "include"
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setAccountObject(response.responseObject);
-          setFilteredAccounts(response.responseObject);
-          setDisplayTable(true);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setAccountObject(response.responseObject);
+        setFilteredAccounts(response.responseObject);
+        setDisplayTable(true);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     } finally {
       setSpinner(false);
@@ -142,7 +138,6 @@ export default function EnterBalance() {
       setErrorMessage("Please provide Account Balance!");
       return;
     }
-    // 🔥 REMOVE COMMAS
     balanceAmount = balanceAmount.replace(/,/g, '');
     try {
       setSpinner(true);
@@ -155,27 +150,23 @@ export default function EnterBalance() {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setSuccessMessage(response.message);
-          // Clear the balance for this account after successful save
-          setBalances(prev => {
-            const newBalances = { ...prev };
-            delete newBalances[accountId];
-            return newBalances;
-          });
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessage(response.message);
+        // Clear the balance for this account after successful save
+        setBalances(prev => {
+          const newBalances = { ...prev };
+          delete newBalances[accountId];
+          return newBalances;
+        });
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     } finally {
       setSpinner(false);
@@ -471,38 +462,6 @@ export default function EnterBalance() {
                     </div>
                   </div>
                 )}
-              </div>
-            </div>
-
-            {/* Information Card */}
-            <div className="mt-6 bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-              <div className="flex items-start space-x-3">
-                <div className="bg-blue-100 p-2 rounded-lg flex-shrink-0">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Instructions</h3>
-                  <ul className="text-sm text-gray-600 space-y-2">
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-1.5 mr-2"></span>
-                      Enter balance amounts with up to 2 decimal places (e.g., 1500.50)
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-1.5 mr-2"></span>
-                      Use negative values for debit balances (e.g., -500.00)
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-1.5 mr-2"></span>
-                      Search for specific accounts using the search box above
-                    </li>
-                    <li className="flex items-start">
-                      <span className="inline-block w-1.5 h-1.5 bg-blue-600 rounded-full mt-1.5 mr-2"></span>
-                      Click "Save" to submit each balance individually
-                    </li>
-                  </ul>
-                </div>
               </div>
             </div>
           </div>

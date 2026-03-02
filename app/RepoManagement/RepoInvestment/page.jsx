@@ -53,13 +53,11 @@ export default function RepoInvestment() {
             const response = await request.json();
             if (request.status === 200) {
                 setRepoList(response.responseObject);
-            } else if (request.status === 409) {
-                setErrorMessage(response.message);
             } else {
                 setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setLoadingStatus(false);
         }
@@ -173,13 +171,11 @@ export default function RepoInvestment() {
                 setTimeout(() => {
                     showRepoDetails();
                 }, 500);
-            } else if (request.status === 409) {
-                setErrorMessage(response.message);
             } else {
                 setErrorMessage(response.message || "Unexpected error occurred. Please contact administrator!");
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setInitiating(false);
         }

@@ -47,13 +47,11 @@ export default function BalanceReport() {
                     return sum + (parseFloat(item.amount) || 0);
                 }, 0);
                 setTotalBalance(total);
-            } else if (request.status === 409) {
-                setErrorMessage(response.message);
             } else {
-                setErrorMessage(response.message || "Failed to load balance report");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setViewSpinner(false);
         }
@@ -69,18 +67,14 @@ export default function BalanceReport() {
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setLoadedAccount(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setLoadedAccount(response.responseObject);
             } else {
-                setErrorMessage("Unable to fetch From Bank Account list!");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred! Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     };
 
@@ -94,18 +88,14 @@ export default function BalanceReport() {
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setLoadedBanks(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setLoadedBanks(response.responseObject);
             } else {
-                setErrorMessage("Unable to fetch Bank list!");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred! Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     };
 

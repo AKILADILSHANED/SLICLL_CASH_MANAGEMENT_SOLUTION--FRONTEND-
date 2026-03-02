@@ -35,22 +35,15 @@ export default function RepoDelete({ onCancel }) {
                     credentials: "include"
                 }
             );
+            const response = await request.json();
             if (request.status === 200) {
-                const response = await request.json();
                 setRepoDetails(response.responseObject);
                 setRepoDataTable(true);
-            } else if (request.status === 409) {
-                const response = await request.json();
-                setErrorMessage(response.message);
-            } else if (request.status === 500) {
-                const response = await request.json();
-                setErrorMessage(response.message);
             } else {
-                const response = await request.json();
                 setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setSpinnerSearch(false);
         }
@@ -78,13 +71,11 @@ export default function RepoDelete({ onCancel }) {
                 setSuccessMessage(response.message);
                 setRepoDataTable(false);
                 setTextRepoId("");
-            } else if (request.status === 409) {
-                setErrorMessage(response.message);
             } else {
                 setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!!!");
+            setErrorMessage("Response not received from server. Please contact administrator!!!");
         } finally {
             setSpinnerDelete(false);
         }

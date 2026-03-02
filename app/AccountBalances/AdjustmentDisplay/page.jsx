@@ -29,16 +29,15 @@ export default function AdjustmentDisplay({ onCancel }) {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {                
                 setAdjustmentData(response.responseObject);
                 setAdjustmentDataTable(true);
             } else {
-                const response = await request.json();
                 setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setSpinner(false);
         }
@@ -155,7 +154,7 @@ export default function AdjustmentDisplay({ onCancel }) {
                                         value={textBalanceId}
                                         onChange={(e) => setTextBalanceId(e.target.value.toUpperCase())}
                                         onKeyPress={handleKeyPress}
-                                        placeholder="Enter Balance ID (e.g., BAL001)"
+                                        placeholder="Enter Balance ID (e.g., BAL-202601-0001)"
                                         className="pl-10 w-full p-3.5 text-gray-900 bg-white border-2 border-gray-200 rounded-xl 
                                                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200
                                                  hover:border-blue-400 hover:shadow-sm outline-none

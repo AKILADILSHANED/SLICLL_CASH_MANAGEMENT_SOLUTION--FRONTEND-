@@ -67,6 +67,7 @@ export default function UserRegister({ onCancel }) {
     if (fileInput) fileInput.value = '';
   };
 
+  //Define User Register function;
   const userRegister = async (e) => {
     setLoader(true);
     e.preventDefault();
@@ -96,8 +97,8 @@ export default function UserRegister({ onCancel }) {
         }
       );
 
-      if (request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status === 200) {
         if (response.success == false) {
           setErrorMessage(response.message);
           setLoader(false);
@@ -107,17 +108,23 @@ export default function UserRegister({ onCancel }) {
           // Reset form after successful registration
           resetForm();
         }
-      } else {
+      } else if (request.status === 403) {
+        setErrorMessage(response.message);
+      } else if (request.status === 500) {
+        setErrorMessage(response.message);
+      }
+      else {
         setErrorMessage(
-          "No response received from server. Please contact administrator!"
+          "Un-expected error occurred. Please contact administrator!"
         );
         setLoader(false);
       }
     } catch (error) {
       setErrorMessage(
-        error +
-        " (Un-expected error occurred. Please contact administrator!)"
+        "No response received from server!"
       );
+      setLoader(false);
+    } finally {
       setLoader(false);
     }
   };
@@ -160,7 +167,7 @@ export default function UserRegister({ onCancel }) {
                   <div className="w-1 h-6 bg-blue-600 rounded-full mr-3"></div>
                   <h2 className="text-lg font-semibold text-gray-800">Personal Information</h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* User Status */}
                   <div className="space-y-2">
@@ -250,7 +257,7 @@ export default function UserRegister({ onCancel }) {
                   <div className="w-1 h-6 bg-blue-600 rounded-full mr-3"></div>
                   <h2 className="text-lg font-semibold text-gray-800">Contact & Employment Details</h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Email */}
                   <div className="space-y-2">
@@ -311,7 +318,7 @@ export default function UserRegister({ onCancel }) {
                   <div className="w-1 h-6 bg-blue-600 rounded-full mr-3"></div>
                   <h2 className="text-lg font-semibold text-gray-800">Role & Department</h2>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* User Level */}
                   <div className="space-y-2">
@@ -356,6 +363,7 @@ export default function UserRegister({ onCancel }) {
                                  hover:border-blue-400 hover:shadow-sm outline-none appearance-none
                                  dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                         <option value="" className="text-gray-400">- Select User Position -</option>
+                        <option value="Administrator" className="py-2">Administrator</option>
                         <option value="Finance Assistant" className="py-2">Finance Assistant</option>
                         <option value="Finance Executive" className="py-2">Finance Executive</option>
                         <option value="Insurance Assistant" className="py-2">Insurance Assistant</option>
@@ -419,11 +427,13 @@ export default function UserRegister({ onCancel }) {
                                  dark:bg-gray-800 dark:border-gray-600 dark:text-white">
                         <option value="" className="text-gray-400">- Select Section -</option>
                         <option value="Investment" className="py-2">Investment</option>
-                        <option value="Payment" className="py-2">Payment</option>
+                        <option value="Life Payment" className="py-2">Life Payment</option>
                         <option value="Salaries" className="py-2">Salaries</option>
-                        <option value="Motor Payments" className="py-2">Motor Payments</option>
+                        <option value="Revenue" className="py-2">Revenue</option>
                         <option value="Tax" className="py-2">Tax</option>
+                        <option value="Verification" className="py-2">Verification</option>
                         <option value="Miscellaneous Payments" className="py-2">Miscellaneous Payments</option>
+                        <option value="Other" className="py-2">Other</option>
                       </select>
                       <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

@@ -44,13 +44,11 @@ export default function AccountsReport() {
                     account.status && account.status.toLowerCase() === 'active'
                 ).length;
                 setActiveAccounts(active);
-            } else if (request.status === 409) {
-                setErrorMessage(response.message);
             } else {
-                setErrorMessage(response.message || "Failed to load account report");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setloadingMessage(false);
         }
@@ -456,10 +454,10 @@ export default function AccountsReport() {
                                                 <td className="px-6 py-4">
                                                     <div>
                                                         <div className="font-medium text-gray-900 mb-1">
-                                                            Account #{element.bankAccount}
+                                                            Account No. {element.bankAccount}
                                                         </div>
                                                         <div className="text-xs text-gray-500">
-                                                            ID: {element.accountId}
+                                                            Account ID: {element.accountId}
                                                         </div>
                                                         <div className="mt-2">
                                                             {getAccountTypeBadge(element.accountType)}

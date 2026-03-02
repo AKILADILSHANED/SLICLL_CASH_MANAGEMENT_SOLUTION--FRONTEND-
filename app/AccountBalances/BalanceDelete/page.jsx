@@ -40,22 +40,18 @@ export default function DeleteBalance({ onCancel }) {
             credentials: "include",
           }
         );
-        if (request.ok) {
-          const response = await request.json();
-          if (response.success == false) {
-            setErrorMessage(response.message);
-          } else {
-            setBalanceData(response.responseObject);
-            setBalanceDisplayWindow(true);
-          }
+        const response = await request.json();
+        if (request.status === 200) {
+          setBalanceData(response.responseObject);
+          setBalanceDisplayWindow(true);
         } else {
           setErrorMessage(
-            "No response from server. Please contact administrator!"
+            response.message
           );
         }
       } catch (error) {
         setErrorMessage(
-          "Un-expected error occurred. Please contact administrator!"
+          "Response not received from server. Please contact administrator!"
         );
       } finally {
         setSpinner(false);
@@ -119,20 +115,16 @@ export default function DeleteBalance({ onCancel }) {
           credentials: "include"
         }
       );
+      const response = await request.json();
       if (request.status === 200) {
-        const response = await request.json();
         setTransferIdList(response.responseObject);
         setTransferDataTable(true);
-      } else if (request.status === 409) {
-        const response = await request.json();
-        setErrorMessage(response.message);
       } else {
-        const response = await request.json();
         setErrorMessage(response.message);
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!!!"
+        "No response from server. Please contact administrator!"
       );
     } finally {
       setShowTransferIdsSpinner(false);

@@ -46,34 +46,30 @@ export default function SearchRequest({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
+      const response = await request.json();
+      if (request.status === 200) {
+        const requests = response.responseObject || [];
+        setRequestList(requests);
+
+        // Calculate total amount
+        const total = requests.reduce((sum, item) => {
+          return sum + (parseFloat(item.requestAmount) || 0);
+        }, 0);
+        setTotalAmount(total);
+
+        if (requestType == 0) {
+          setActualRequestDetailsWindow(true);
         } else {
-          const requests = response.responseObject || [];
-          setRequestList(requests);
-
-          // Calculate total amount
-          const total = requests.reduce((sum, item) => {
-            return sum + (parseFloat(item.requestAmount) || 0);
-          }, 0);
-          setTotalAmount(total);
-
-          if (requestType == 0) {
-            setActualRequestDetailsWindow(true);
-          } else {
-            setForecastRequestDetailsWindow(true);
-          }
+          setForecastRequestDetailsWindow(true);
         }
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Unexpected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     } finally {
       setSearchSpinner(false);

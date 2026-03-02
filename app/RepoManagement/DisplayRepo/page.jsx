@@ -30,22 +30,15 @@ export default function DisplayRepo() {
           credentials: "include"
         }
       );
+      const response = await request.json();
       if (request.status === 200) {
-        const response = await request.json();
         setRepoDetails(response.responseObject);
         setRepoDataTable(true);
-      } else if (request.status === 409) {
-        const response = await request.json();
-        setErrorMessage(response.message);
-      } else if (request.status === 500) {
-        const response = await request.json();
-        setErrorMessage(response.message);
       } else {
-        const response = await request.json();
         setErrorMessage(response.message);
       }
     } catch (error) {
-      setErrorMessage("Un-expected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setSpinnerSearch(false);
     }
@@ -239,7 +232,7 @@ export default function DisplayRepo() {
                       <p className="text-sm text-gray-600">Found {repoDetails.length} REPO investment(s)</p>
                     </div>
                   </div>
-                  
+
                 </div>
               </div>
 

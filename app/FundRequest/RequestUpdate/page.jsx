@@ -49,28 +49,24 @@ export default function UpdateRequest({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          const data = response.responseObject;
-          setRequestDetails(data);
-          setUpdatedAccountNumber(data.accountId || "");
-          setUpdatedPaymentType(data.paymentId || "");
-          setRequestDetailsWindow(true);
-          setUpdatedAdjustmentType("");
-          setUpdatedAdjustmentAmount("");
-          setIsModified(false);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        const data = response.responseObject;
+        setRequestDetails(data);
+        setUpdatedAccountNumber(data.accountId || "");
+        setUpdatedPaymentType(data.paymentId || "");
+        setRequestDetailsWindow(true);
+        setUpdatedAdjustmentType("");
+        setUpdatedAdjustmentAmount("");
+        setIsModified(false);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Unexpected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     } finally {
       setSearchSpinner(false);
@@ -129,29 +125,25 @@ export default function UpdateRequest({ onCancel }) {
           }),
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setSuccessMessage(response.message);
-          setUpdatedAdjustmentType("");
-          setUpdatedAdjustmentAmount("");
-          setIsModified(false);
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessage(response.message);
+        setUpdatedAdjustmentType("");
+        setUpdatedAdjustmentAmount("");
+        setIsModified(false);
 
-          // Auto-hide success message after 5 seconds
-          setTimeout(() => {
-            setSuccessMessage("");
-          }, 5000);
-        }
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Unexpected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     } finally {
       setUpdateSpinner(false);
@@ -779,8 +771,8 @@ export default function UpdateRequest({ onCancel }) {
                           onClick={resetForm}
                           disabled={!isModified}
                           className={`px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${isModified
-                              ? 'text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300'
-                              : 'text-gray-400 bg-gray-50 cursor-not-allowed'
+                            ? 'text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300'
+                            : 'text-gray-400 bg-gray-50 cursor-not-allowed'
                             }`}
                         >
                           <svg

@@ -38,11 +38,10 @@ export default function ReverseTransfers() {
           credentials: "include",
         }
       );
-      if (!request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status !== 200) {
         setErrorMessage(response.message || "Failed to fetch transfers");
       } else {
-        const response = await request.json();
         const transfers = response.responseObject || [];
         setTransferData(transfers);
         settransferDataTable(true);
@@ -56,7 +55,7 @@ export default function ReverseTransfers() {
       }
 
     } catch (error) {
-      setErrorMessage("Unexpected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setViewSpinner(false);
     }
@@ -75,11 +74,10 @@ export default function ReverseTransfers() {
           credentials: "include"
         }
       );
-      if (!request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status !== 200) {
         setErrorMessage(response.message || "Failed to reverse transfer");
       } else {
-        const response = await request.json();
         setSuccessMessage(response.message);
 
         // Remove reversed transfer from list
@@ -99,7 +97,7 @@ export default function ReverseTransfers() {
         }, 5000);
       }
     } catch (error) {
-      setErrorMessage("Unexpected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setReversingTransfer(null);
     }
@@ -119,11 +117,10 @@ export default function ReverseTransfers() {
           credentials: "include"
         }
       );
-      if (!request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status !== 200) {        
         setErrorMessage(response.message || "Failed to reverse all transfers");
       } else {
-        const response = await request.json();
         setSuccessMessage(response.message);
         settransferDataTable(false);
         setTransferData([]);
@@ -136,7 +133,7 @@ export default function ReverseTransfers() {
         }, 5000);
       }
     } catch (error) {
-      setErrorMessage("Unexpected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setReverseSpinner(false);
     }
@@ -547,7 +544,7 @@ export default function ReverseTransfers() {
                     <div className="text-sm text-gray-600">
                       <span className="font-semibold">Total Reversal Amount:</span>
                       <span className="ml-2 text-lg font-bold text-red-700">
-                        ${formatCurrency(totalAmount)}
+                        Rs.{formatCurrency(totalAmount)}
                       </span>
                     </div>
                     <button

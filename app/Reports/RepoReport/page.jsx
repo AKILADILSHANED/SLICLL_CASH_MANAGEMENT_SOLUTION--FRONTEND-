@@ -53,13 +53,11 @@ export default function RepoReport() {
                     repo.deleteStatus === "0" || repo.deleteStatus?.toLowerCase() === 'active'
                 ).length;
                 setActiveRepos(active);
-            } else if (request.status === 409) {
+            }else {
                 setErrorMessage(response.message);
-            } else {
-                setErrorMessage(response.message || "Failed to load repo report");
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setViewSpinner(false);
         }
@@ -75,18 +73,14 @@ export default function RepoReport() {
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setLoadedAccount(response.responseObject || []);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setLoadedAccount(response.responseObject || []);
             } else {
-                setErrorMessage("Unable to fetch Bank Account list!");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred! Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     };
 

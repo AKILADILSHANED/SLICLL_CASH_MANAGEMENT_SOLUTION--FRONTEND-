@@ -85,21 +85,17 @@ export default function Adjustments() {
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setBankAccountList(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setBankAccountList(response.responseObject);
             } else {
                 setErrorMessage(
-                    "Unable to load Account Numbers. Please contact administrator!"
+                    response.message
                 );
             }
         } catch (error) {
             setErrorMessage(
-                "Un-expected error occurred. Please contact administrator!"
+                "Response not received from server. Please contact administrator!"
             );
         }
     };
@@ -115,16 +111,14 @@ export default function Adjustments() {
                     credentials: "include",
                 }
             );
+            const response = await request.json();
             if (request.status === 200) {
-                const response = await request.json();
                 setFromRepoList(response.responseObject);
-            } else if (request.status === 409) {
-                const response = await request.json();
+            } else {
                 setErrorMessage(response.message);
             }
         } catch (error) {
-            const response = await request.json();
-            setErrorMessage(response.message);
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     }
 
@@ -140,18 +134,16 @@ export default function Adjustments() {
                     credentials: "include",
                 }
             );
+            const response = await request.json();
             if (request.status === 200) {
-                const response = await request.json();
                 setToRepoList(response.responseObject);
                 setRepoLoading("Repo Loaded Successfully");
-            } else if (request.status === 409) {
-                const response = await request.json();
+            } else {
                 setErrorMessage(response.message);
                 setRepoLoading("Error");
             }
         } catch (error) {
-            const response = await request.json();
-            setErrorMessage(response.message);
+            setErrorMessage("Response not received from server. Please contact administrator!");
             setRepoLoading("Error");
         }
     }
@@ -167,16 +159,14 @@ export default function Adjustments() {
                     credentials: "include",
                 }
             );
+            const response = await request.json();
             if (request.status === 200) {
-                const response = await request.json();
                 setTransferChanelList(response.responseObject);
-            } else if (request.status === 409) {
-                const response = await request.json();
+            } else {
                 setErrorMessage(response.message);
             }
         } catch (error) {
-            const response = await request.json();
-            setErrorMessage(response.message);
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     }
 
@@ -221,15 +211,14 @@ export default function Adjustments() {
                     )
                 },
             );
+            const response = await request.json();
             if (request.status === 200) {
-                const response = await request.json();
                 setSuccessMessage(response.message);
-            } else if (request.status === 409) {
-                const response = await request.json();
+            } else {
                 setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setSaveSpinner(false);
         }
@@ -259,19 +248,14 @@ export default function Adjustments() {
                 },
 
             );
+            const response = await request.json();
             if (request.status === 200) {
-                const response = await request.json();
                 setSuccessMessage(response.message);
-            } else if (request.status === 409) {
-                const response = await request.json();
-                setErrorMessage(response.message);
-            } else if (request.status === 500) {
-                const response = await request.json();
+            } else {
                 setErrorMessage(response.message);
             }
         } catch (error) {
-            console.log(error)
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setTransferSpinner(false);
         }
@@ -288,8 +272,8 @@ export default function Adjustments() {
                     credentials: "include"
                 }
             );
-            if (request.status === 200) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {                
                 if (response.responseObject == true) {
                     setChanelDropdown(false);
                 } else {
@@ -298,7 +282,7 @@ export default function Adjustments() {
                 setAccountNumber(newRepoAccountId);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred, while fetching Bank Accounts!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     }
 
@@ -313,8 +297,8 @@ export default function Adjustments() {
                     credentials: "include"
                 }
             );
-            if (request.status === 200) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {                
                 if (response.responseObject == true) {
                     setChanelDropdown(false);
                 } else {
@@ -323,7 +307,7 @@ export default function Adjustments() {
                 setToRepo(toRepo);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred, while fetching Bank Accounts!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     }
 
@@ -352,7 +336,7 @@ export default function Adjustments() {
                             <div className="w-1 h-6 bg-blue-600 rounded-full mr-3"></div>
                             <h2 className="text-lg font-semibold text-gray-800">Adjustment Configuration</h2>
                         </div>
-                        
+
                         <form>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* From Repo Selector */}
@@ -588,7 +572,7 @@ export default function Adjustments() {
                                         <p className="text-sm text-gray-600 mb-4 leading-relaxed">
                                             Please confirm whether this REPO is eligible to initiate fund transfers for other bank accounts when existing funds are insufficient for daily payments.
                                         </p>
-                                        
+
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             <div className="relative">
                                                 <input
@@ -601,7 +585,7 @@ export default function Adjustments() {
                                                     className="sr-only peer"
                                                     id="eligibleNew"
                                                 />
-                                                <label 
+                                                <label
                                                     htmlFor="eligibleNew"
                                                     className="flex items-center p-4 cursor-pointer bg-white border-2 border-gray-200 rounded-lg 
                                                              hover:border-blue-400 transition-all duration-200
@@ -616,7 +600,7 @@ export default function Adjustments() {
                                                     </div>
                                                 </label>
                                             </div>
-                                            
+
                                             <div className="relative">
                                                 <input
                                                     type="radio"
@@ -628,7 +612,7 @@ export default function Adjustments() {
                                                     className="sr-only peer"
                                                     id="notEligibleNew"
                                                 />
-                                                <label 
+                                                <label
                                                     htmlFor="notEligibleNew"
                                                     className="flex items-center p-4 cursor-pointer bg-white border-2 border-gray-200 rounded-lg 
                                                              hover:border-red-400 transition-all duration-200
@@ -671,7 +655,7 @@ export default function Adjustments() {
                                                     </>
                                                 )}
                                             </button>
-                                            
+
                                             <button
                                                 type="button"
                                                 onClick={() => handleCancel(setNewRepo)}
@@ -850,7 +834,7 @@ export default function Adjustments() {
                                                     </>
                                                 )}
                                             </button>
-                                            
+
                                             <button
                                                 type="button"
                                                 onClick={() => handleCancel(setExistingRepo)}

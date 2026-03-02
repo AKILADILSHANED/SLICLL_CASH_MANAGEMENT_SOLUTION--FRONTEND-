@@ -30,16 +30,15 @@ export default function RepoAdjustments({ onCancel }) {
           credentials: "include"
         }
       );
-      if (request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status === 200) {
         setAdjustmentData(response.responseObject);
         setAdjustmentDataTable(true);
       } else {
-        const response = await request.json();
         setErrorMessage(response.message);
       }
     } catch (error) {
-      setErrorMessage("Un-expected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setSpinner(false);
     }

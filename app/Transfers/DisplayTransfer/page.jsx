@@ -37,16 +37,15 @@ export default function DisplayTransfer() {
           credentials: "include",
         }
       );
-      if (!request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status !== 200) {        
         setErrorMessage(response.message || "Failed to fetch transfer details");
       } else {
-        const response = await request.json();
         setTransferDataTable(true);
         setTransferData(response.responseObject || {});
       }
     } catch (error) {
-      setErrorMessage("Unexpected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setViewSpinner(false)
     }

@@ -50,7 +50,7 @@ export default function UserDelete({ onCancel }) {
     } else {
       try {
         const request = await fetch(
-          `${baseUrl}/api/v1/user/user-search?userId=${encodeURIComponent(
+          `${baseUrl}/api/v1/user/user-search-for-delete?userId=${encodeURIComponent(
             userId
           )}`,
           {
@@ -59,44 +59,32 @@ export default function UserDelete({ onCancel }) {
             headers: { "Content-Type": "application/json" },
           }
         );
-        if (request.ok) {
-          const respnse = await request.json();
-          if (respnse.success == true) {
-            //Setting response values to text field states.
-            setFirstName(respnse.responseObject.userFirstName);
-            setLastName(respnse.responseObject.userLastName);
-            setEpf(respnse.responseObject.userEpf);
-            setEmail(respnse.responseObject.userEmail);
-            setActiveStatus(respnse.responseObject.userActiveStatus);
-            setUserLevel(respnse.responseObject.userLevel);
-            setUserPosition(respnse.responseObject.userPosition);
-            setCreatedDate(respnse.responseObject.userCreatedDate);
-            setCreatedBy(respnse.responseObject.userCreateBy);
-            setUserDetailsWindow(true);
-          } else {
-            setErrorMessageStatus(true);
-            setMessage(respnse.message);
-            setUserDetailsWindow(false);
-          }
+
+        const response = await request.json();
+        if (request.status === 200) {
+          //Setting response values to text field states.
+          setFirstName(response.responseObject.userFirstName);
+          setLastName(response.responseObject.userLastName);
+          setEpf(response.responseObject.userEpf);
+          setEmail(response.responseObject.userEmail);
+          setActiveStatus(response.responseObject.userActiveStatus);
+          setUserLevel(response.responseObject.userLevel);
+          setUserPosition(response.responseObject.userPosition);
+          setCreatedDate(response.responseObject.userCreatedDate);
+          setCreatedBy(response.responseObject.userCreateBy);
+          setUserDetailsWindow(true);
         } else {
-          if (request.status === 403) {
-            router.push("/AccessDenied");
-          } else {
-            setErrorMessageStatus(true);
-            setMessage(
-              "No response received from the server. Please contact the administrator!"
-            );
-            setUserDetailsWindow(false);
-          }
+          setErrorMessageStatus(true);
+          setMessage(response.message);
+          setUserDetailsWindow(false);
         }
-        setLoader(false);
       } catch (error) {
         setErrorMessageStatus(true);
-        setMessage("Un-expected error occured. Please contact administrator!");
+        setMessage("Response not received from server!");
         setUserDetailsWindow(false);
+      } finally {
         setLoader(false);
       }
-      setLoader(false);
     }
   };
 
@@ -116,27 +104,18 @@ export default function UserDelete({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == true) {
-          setSuccessMessageStatus(true);
-          setMessage(response.message);
-          setDeleteLoader(false);
-        } else {
-          setErrorMessageStatus(true);
-          setMessage(response.message);
-          setDeleteLoader(false);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessageStatus(true);
+        setMessage(response.message);
       } else {
         setErrorMessageStatus(true);
-        setMessage(
-          "Unable to delete the user at this moment. Please contact administrator!"
-        );
-        setDeleteLoader(false);
+        setMessage(response.message);
       }
     } catch (error) {
       setErrorMessageStatus(true);
-      setMessage("Un-expected error occurred. Please contact administrator!");
+      setMessage("Response not received from server!");
+    } finally {
       setDeleteLoader(false);
     }
   };
@@ -415,18 +394,6 @@ export default function UserDelete({ onCancel }) {
                   </div>
                 </div>
               </div>
-              {/* Messages */}
-              {errorMessageStatus && (
-                <div className="mt-6 animate-slideDown">
-                  <ErrorMessage messageValue={message} />
-                </div>
-              )}
-
-              {successMessageStatus && (
-                <div className="mt-6 animate-slideDown">
-                  <SUccessMessage messageValue={message} />
-                </div>
-              )}
               {/* Action Buttons */}
               <div className="mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
                 <button
@@ -481,7 +448,18 @@ export default function UserDelete({ onCancel }) {
             </div>
           </div>
         )}
+        {/* Messages */}
+        {errorMessageStatus && (
+          <div className="mt-6 animate-slideDown">
+            <ErrorMessage messageValue={message} />
+          </div>
+        )}
 
+        {successMessageStatus && (
+          <div className="mt-6 animate-slideDown">
+            <SUccessMessage messageValue={message} />
+          </div>
+        )}
         {/* Initial State Message */}
         {!userDetailsWindow && !errorMessageStatus && !successMessageStatus && (
           <div className="mt-12 text-center animate-fadeIn">

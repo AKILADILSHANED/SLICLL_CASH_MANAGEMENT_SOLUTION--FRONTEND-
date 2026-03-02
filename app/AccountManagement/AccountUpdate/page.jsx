@@ -66,44 +66,39 @@ export default function UpdateAccount({ onCancel }) {
             credentials: "include",
           }
         );
-        if (request.ok) {
-          const response = await request.json();
-          if (response.success == false) {
-            setErrorMessage(response.message);
-          } else {
-            //Set values for each state;
-            const data = response.responseObject;
-            setAccountId(data.accountId);
-            setBankId(data.bankId);
-            setBank(data.bank);
-            setBranch(data.bankBranch);
-            setAccountType(data.accountType);
-            setCurrency(data.currency);
-            setGlCode(data.glCode);
-            setAccountNumber(data.accountNumber);
-            setRegisterDate(data.registeredDate);
-            setRegisterBy(data.registeredBy);
+        const response = await request.json();
+        if (request.status === 200) {
+          //Set values for each state;
+          const data = response.responseObject;
+          setAccountId(data.accountId);
+          setBankId(data.bankId);
+          setBank(data.bank);
+          setBranch(data.bankBranch);
+          setAccountType(data.accountType);
+          setCurrency(data.currency);
+          setGlCode(data.glCode);
+          setAccountNumber(data.accountNumber);
+          setRegisterDate(data.registeredDate);
+          setRegisterBy(data.registeredBy);
 
-            // Store original data for change detection
-            setOriginalData({
-              bank: data.bankId,
-              branch: data.bankBranch,
-              accountNumber: data.accountNumber,
-              accountType: data.accountType,
-              currency: data.currency,
-              glCode: data.glCode
-            });
-
-            setAccountDetailsWindow(true);
-          }
+          // Store original data for change detection
+          setOriginalData({
+            bank: data.bankId,
+            branch: data.bankBranch,
+            accountNumber: data.accountNumber,
+            accountType: data.accountType,
+            currency: data.currency,
+            glCode: data.glCode
+          });
+          setAccountDetailsWindow(true);
         } else {
           setErrorMessage(
-            "No response from server. Please contact administrator!"
+            response.message
           );
         }
       } catch (error) {
         setErrorMessage(
-          "Un-expected error occurred while fetching account data. Please contact administrator!"
+          "Response not received from server. Please contact administrator!"
         );
       } finally {
         setSpinnerSearch(false);
@@ -121,15 +116,11 @@ export default function UpdateAccount({ onCancel }) {
           credentials: "include"
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setBankList(response.responseObject);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setBankList(response.responseObject);
       } else {
-        setErrorMessage("Unable to fetch Bank List. Please contact administrator!");
+        setErrorMessage(response.message);
       }
     } catch (error) {
       setErrorMessage("Un-expected error occurred. Please contact administrator!");
@@ -146,7 +137,6 @@ export default function UpdateAccount({ onCancel }) {
       setErrorMessage("No changes detected. Please modify at least one field before updating.");
       return;
     }
-
     setSuccessMessage("");
     setErrorMessage("");
     try {
@@ -168,7 +158,7 @@ export default function UpdateAccount({ onCancel }) {
           }),
         }
       );
-      if (request.ok) {
+      if (request.status === 200) {
         const response = await request.json();
         if (response.success == false) {
           setErrorMessage(response.message);
@@ -179,13 +169,11 @@ export default function UpdateAccount({ onCancel }) {
           setIsModified(false);
         }
       } else {
-        setErrorMessage(
-          "No response from server. Please contact administrator!"
-        );
+        setErrorMessage(response.message);
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred while updating account data. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     } finally {
       setSpinnerUpdate(false);

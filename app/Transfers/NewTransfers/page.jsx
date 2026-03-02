@@ -35,21 +35,19 @@ export default function NewTransfers({ manualTransfer }) {
           credentials: "include",
         }
       );
-      if (!request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status !== 200) {
         setErrorMessage(response.message || "Failed to initiate transfers");
       } else {
-        const response = await request.json();
         setSuccessMessage(response.message);
         setShowConfirmation(false);
-
         // Auto-hide success message after 5 seconds
         setTimeout(() => {
           setSuccessMessage("");
         }, 5000);
       }
     } catch (error) {
-      setErrorMessage("Unexpected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setTransferSpinner(false);
       setIsInitiating(false);

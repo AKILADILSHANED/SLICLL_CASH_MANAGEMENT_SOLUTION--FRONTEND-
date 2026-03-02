@@ -19,34 +19,30 @@ export default function PaymentSearch({ onCancel }) {
   const handleSearch = async () => {
     setErrorMessage("");
     setPaymentDetailsWindow(false);
-    if(textPaymentId == ""){
-        setErrorMessage("Please provide a Payment ID!");
-    }else{
-        try{
-            setSpinnerSearch(true);
-            const request = await fetch(
-                `${baseUrl}/api/v1/payment/payment-search?paymentId=${encodeURIComponent(textPaymentId)}`,
-                {
-                    method:"GET",
-                    credentials:"include"
-                }
-            );
-            if(request.ok){
-                const response = await request.json();
-                if(response.success == false){
-                    setErrorMessage(response.message);
-                }else{
-                    setPaymentData(response.responseObject);
-                    setPaymentDetailsWindow(true);
-                }
-            }else{
-                setErrorMessage("No response from server. Please contact administrator!");
-            }
-        }catch(error){
-            setErrorMessage("Un-expected eror occurred. Please contact administrator!");
-        }finally{
-            setSpinnerSearch(false);
+    if (textPaymentId == "") {
+      setErrorMessage("Please provide a Payment ID!");
+    } else {
+      try {
+        setSpinnerSearch(true);
+        const request = await fetch(
+          `${baseUrl}/api/v1/payment/payment-search?paymentId=${encodeURIComponent(textPaymentId)}`,
+          {
+            method: "GET",
+            credentials: "include"
+          }
+        );
+        const response = await request.json();
+        if (request.status === 200) {
+          setPaymentData(response.responseObject);
+          setPaymentDetailsWindow(true);
+        } else {
+          setErrorMessage(response.message);
         }
+      } catch (error) {
+        setErrorMessage("Response not received from server. Please contact administrator!");
+      } finally {
+        setSpinnerSearch(false);
+      }
     }
   };
 
@@ -147,7 +143,7 @@ export default function PaymentSearch({ onCancel }) {
               </div>
               <p className="text-xs text-gray-500 mt-2">Enter the Payment ID to search for payment details</p>
             </div>
-            
+
             <div className="flex items-end">
               <button
                 onClick={() => handleSearch()}
@@ -212,7 +208,7 @@ export default function PaymentSearch({ onCancel }) {
                     </svg>
                     Payment Information
                   </h3>
-                  
+
                   <div className="space-y-4">
                     <div className="flex justify-between items-center pb-3 border-b border-blue-100">
                       <span className="text-sm font-medium text-gray-600">Payment ID</span>
@@ -220,7 +216,7 @@ export default function PaymentSearch({ onCancel }) {
                         {paymentData.paymentId || "N/A"}
                       </span>
                     </div>
-                    
+
                     <div className="flex justify-between items-center pb-3 border-b border-blue-100">
                       <span className="text-sm font-medium text-gray-600">Payment Type</span>
                       <span className="text-sm font-semibold text-gray-800">
@@ -238,7 +234,7 @@ export default function PaymentSearch({ onCancel }) {
                     </svg>
                     Registration Details
                   </h3>
-                  
+
                   <div className="space-y-4">
                     <div className="flex justify-between items-center pb-3 border-b border-gray-200">
                       <span className="text-sm font-medium text-gray-600">Registered Date</span>
@@ -246,7 +242,7 @@ export default function PaymentSearch({ onCancel }) {
                         {formatDate(paymentData.registeredDate)}
                       </span>
                     </div>
-                    
+
                     <div className="flex justify-between items-center">
                       <span className="text-sm font-medium text-gray-600">Registered By</span>
                       <span className="text-sm font-semibold text-gray-800">
@@ -266,7 +262,7 @@ export default function PaymentSearch({ onCancel }) {
                     </svg>
                     Payment information retrieved successfully
                   </div>
-                  
+
                   <div className="flex flex-wrap gap-3">
                     <button
                       onClick={clearSearch}

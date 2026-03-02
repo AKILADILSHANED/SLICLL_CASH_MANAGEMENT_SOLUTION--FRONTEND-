@@ -48,11 +48,10 @@ export default function DisplayAllTransfer() {
           credentials: "include",
         }
       );
-      if (!request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status !== 200) {
         setErrorMessage(response.message || "Failed to fetch transfer data");
       } else {
-        const response = await request.json();
         const transfers = response.responseObject || [];
         setTransferDataTable(true);
         setTransferData(transfers);
@@ -66,7 +65,7 @@ export default function DisplayAllTransfer() {
       }
 
     } catch (error) {
-      setErrorMessage("Unexpected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setViewSpinner(false)
     }

@@ -33,14 +33,14 @@ export default function TransferHistory({ onCancel }) {
                 method: "GET",
                 credentials: "include",
             });
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 setLoadedChanel(response.responseObject || []);
             } else {
-                setErrorMessage("Failed to load channels");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     };
     useEffect(() => {
@@ -57,18 +57,14 @@ export default function TransferHistory({ onCancel }) {
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setLoadedFromAccount(response.responseObject || []);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setLoadedFromAccount(response.responseObject || []);
             } else {
-                setErrorMessage("Unable to fetch From Bank Account list!");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred! Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     };
     useEffect(() => {
@@ -84,19 +80,14 @@ export default function TransferHistory({ onCancel }) {
                     method: "GET",
                     credentials: "include",
                 }
-            );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setLoadedToAccount(response.responseObject || []);
-                }
+            ); const response = await request.json();
+            if (request.status === 200) {
+                setLoadedToAccount(response.responseObject || []);
             } else {
-                setErrorMessage("Unable to fetch To Bank Account list!");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred! Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         }
     };
     useEffect(() => {
@@ -118,29 +109,28 @@ export default function TransferHistory({ onCancel }) {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
-                setErrorMessage(response.message || "Failed to load transfer history");
+            const response = await request.json();
+            if (request.status !== 200) {
+                setErrorMessage(response.message);
             } else {
-                const response = await request.json();
                 const transfers = response.responseObject || [];
                 setHistoryData(transfers);
                 setHistoryTable(true);
                 setTotalTransfers(transfers.length);
-                
+
                 // Calculate total amount and approved transfers
                 const total = transfers.reduce((sum, item) => {
                     return sum + (parseFloat(item.transferAmount) || 0);
                 }, 0);
                 setTotalAmount(total);
-                
-                const approved = transfers.filter(transfer => 
+
+                const approved = transfers.filter(transfer =>
                     transfer.approveStatus && transfer.approveStatus.toLowerCase() === 'approved'
                 ).length;
                 setApprovedTransfers(approved);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact the administrator!");
+            setErrorMessage("Response not received from server. Please contact the administrator!");
         } finally {
             setViewSpinner(false);
         }
@@ -259,17 +249,17 @@ export default function TransferHistory({ onCancel }) {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                             <div className="bg-white/20 p-2 rounded-lg">
-                                <svg 
-                                    className="w-6 h-6 text-white" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24" 
+                                <svg
+                                    className="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth="2" 
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
                                     ></path>
                                 </svg>
@@ -309,17 +299,17 @@ export default function TransferHistory({ onCancel }) {
                                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 
                                          rounded-lg transition-all duration-200 flex items-center gap-2"
                             >
-                                <svg 
-                                    className="w-4 h-4" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24" 
+                                <svg
+                                    className="w-4 h-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth="2" 
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M6 18L18 6M6 6l12 12"
                                     ></path>
                                 </svg>
@@ -338,17 +328,17 @@ export default function TransferHistory({ onCancel }) {
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-400" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5 text-gray-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 ></path>
                                             </svg>
@@ -370,17 +360,17 @@ export default function TransferHistory({ onCancel }) {
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-400" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5 text-gray-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                                                 ></path>
                                             </svg>
@@ -475,17 +465,17 @@ export default function TransferHistory({ onCancel }) {
                                         </>
                                     ) : (
                                         <>
-                                            <svg 
-                                                className="w-5 h-5" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                                                 ></path>
                                             </svg>
@@ -500,17 +490,17 @@ export default function TransferHistory({ onCancel }) {
                                              rounded-lg hover:from-red-700 hover:to-red-800 focus:ring-4 focus:ring-red-300 
                                              focus:outline-none transition-all duration-200 flex items-center justify-center gap-2"
                                 >
-                                    <svg 
-                                        className="w-5 h-5" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-5 h-5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M6 18L18 6M6 6l12 12"
                                         ></path>
                                     </svg>
@@ -523,17 +513,17 @@ export default function TransferHistory({ onCancel }) {
                     {/* Information Banner */}
                     <div className="mt-6 bg-gradient-to-r from-cyan-50 to-blue-50 border border-blue-200 rounded-lg p-4">
                         <div className="flex items-start">
-                            <svg 
-                                className="w-5 h-5 text-cyan-600 mt-0.5 mr-3 flex-shrink-0" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24" 
+                            <svg
+                                className="w-5 h-5 text-cyan-600 mt-0.5 mr-3 flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth="2" 
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
                                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                 ></path>
                             </svg>
@@ -542,7 +532,7 @@ export default function TransferHistory({ onCancel }) {
                                     Transfer History Information
                                 </h4>
                                 <p className="text-sm text-cyan-700">
-                                    View historical fund transfers within a specific date range. 
+                                    View historical fund transfers within a specific date range.
                                     Filter by accounts and channel type to analyze transfer patterns and status.
                                 </p>
                             </div>
@@ -565,17 +555,17 @@ export default function TransferHistory({ onCancel }) {
                             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                                 <div className="flex items-center space-x-3">
                                     <div className="bg-cyan-100 p-2 rounded-lg">
-                                        <svg 
-                                            className="w-5 h-5 text-cyan-600" 
-                                            fill="none" 
-                                            stroke="currentColor" 
-                                            viewBox="0 0 24 24" 
+                                        <svg
+                                            className="w-5 h-5 text-cyan-600"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
                                             xmlns="http://www.w3.org/2000/svg"
                                         >
-                                            <path 
-                                                strokeLinecap="round" 
-                                                strokeLinejoin="round" 
-                                                strokeWidth="2" 
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
                                                 d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
                                             ></path>
                                         </svg>
@@ -713,7 +703,7 @@ export default function TransferHistory({ onCancel }) {
                                     </div>
                                     <div className="flex items-center space-x-4">
                                         <div className="text-sm text-gray-600">
-                                            <span className="font-semibold">Total Amount:</span> 
+                                            <span className="font-semibold">Total Amount:</span>
                                             <span className="ml-2 text-lg font-bold text-blue-700">
                                                 Rs.{formatCurrency(totalAmount)}
                                             </span>
@@ -728,17 +718,17 @@ export default function TransferHistory({ onCancel }) {
                                             className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 
                                                      rounded-lg transition-all duration-200 flex items-center gap-2"
                                         >
-                                            <svg 
-                                                className="w-4 h-4" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-4 h-4"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
                                                 ></path>
                                             </svg>
@@ -756,17 +746,17 @@ export default function TransferHistory({ onCancel }) {
                     <div className="mt-8 bg-white border border-gray-200 rounded-xl shadow-lg p-8 text-center">
                         <div className="max-w-md mx-auto">
                             <div className="bg-gradient-to-r from-cyan-100 to-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                <svg 
-                                    className="w-8 h-8 text-cyan-600" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24" 
+                                <svg
+                                    className="w-8 h-8 text-cyan-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth="2" 
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"
                                     ></path>
                                 </svg>

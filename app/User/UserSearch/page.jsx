@@ -37,6 +37,7 @@ export default function SearchUser({ onCancel }) {
   const handleSearch = async () => {
     setLoader(true);
     setMessageStatus(false);
+    setUserDetailsWindow(false);
     if (userId == "") {
       setMessageStatus(true);
       setMessage("Please provide a valid User ID!");
@@ -55,30 +56,20 @@ export default function SearchUser({ onCancel }) {
             headers: { "Content-Type": "application/json" },
           }
         );
-        if (request.ok) {
-          const respnse = await request.json();
-          if (respnse.success == true) {
-            setCurrentUser(respnse.responseObject);
-            setUserDetailsWindow(true);
-          } else {
-            setMessageStatus(true);
-            setMessage(respnse.message);
-            setUserDetailsWindow(false);
-          }
+        const response = await request.json();
+        if (request.status === 200) {
+          setCurrentUser(response.responseObject);
+          setUserDetailsWindow(true);
         } else {
           setMessageStatus(true);
-          setMessage(
-            "No response received from the server. Please contact the administrator!"
-          );
-          setUserDetailsWindow(false);
+          setMessage(response.message);
         }
-        setLoader(false);
       } catch (error) {
         setMessageStatus(true);
-        setMessage("Un-expected error occuured. Please contact administrator!");
-        setUserDetailsWindow(false);
+        setMessage("Response not received from server!");
+      } finally {
+        setLoader(false);
       }
-      setLoader(false);
     }
   };
 

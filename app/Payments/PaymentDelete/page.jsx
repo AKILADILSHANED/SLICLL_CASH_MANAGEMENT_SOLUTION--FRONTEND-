@@ -31,7 +31,7 @@ export default function DeletePayment({ onCancel }) {
       try {
         setSpinnerSearch(true);
         const request = await fetch(
-          `${baseUrl}/api/v1/payment/payment-search?paymentId=${encodeURIComponent(
+          `${baseUrl}/api/v1/payment/payment-search-for-delete?paymentId=${encodeURIComponent(
             textPaymentId
           )}`,
           {
@@ -39,23 +39,19 @@ export default function DeletePayment({ onCancel }) {
             credentials: "include",
           }
         );
-        if (request.ok) {
-          const response = await request.json();
-          if (response.success == false) {
-            setErrorMessage(response.message);
-          } else {
-            setPaymentData(response.responseObject);
-            setTextPaymentType(response.responseObject.paymentType);
-            setPaymentDetailsWindow(true);
-          }
+        const response = await request.json();
+        if (request.status === 200) {
+          setPaymentData(response.responseObject);
+          setTextPaymentType(response.responseObject.paymentType);
+          setPaymentDetailsWindow(true);
         } else {
           setErrorMessage(
-            "No response from server. Please contact administrator!"
+            response.message
           );
         }
       } catch (error) {
         setErrorMessage(
-          "Unexpected error occurred. Please contact administrator!"
+          "Response not received from server. Please contact administrator!"
         );
       } finally {
         setSpinnerSearch(false);
@@ -81,30 +77,25 @@ export default function DeletePayment({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-          setConfirmDelete(false);
-        } else {
-          setSuccessMessage(response.message);
-          setPaymentDetailsWindow(false);
-          setTextPaymentId("");
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessage(response.message);
+        setPaymentDetailsWindow(false);
+        setTextPaymentId("");
 
-          // Auto-hide success message after 5 seconds
-          setTimeout(() => {
-            setSuccessMessage("");
-          }, 5000);
-        }
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessage("");
+        }, 5000);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
         setConfirmDelete(false);
       }
     } catch (error) {
       setErrorMessage(
-        "Unexpected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
       setConfirmDelete(false);
     } finally {

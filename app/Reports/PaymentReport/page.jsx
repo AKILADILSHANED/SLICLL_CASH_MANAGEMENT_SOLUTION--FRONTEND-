@@ -44,13 +44,11 @@ export default function PaymentReport() {
                     payment.status && payment.status.toLowerCase() === 'active'
                 ).length;
                 setActivePayments(active);
-            } else if (request.status === 409) {
-                setErrorMessage(response.message);
             } else {
-                setErrorMessage(response.message || "Failed to load payment report");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setloadingMessage(false);
         }

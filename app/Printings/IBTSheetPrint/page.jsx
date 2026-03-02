@@ -34,8 +34,8 @@ export default function IBTSheetPrint() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 const data = response.responseObject || [];
                 setSheetData(data);
                 setSheetDataTable(true);
@@ -47,12 +47,11 @@ export default function IBTSheetPrint() {
                 }, 0);
                 setTotalAmount(total);
             } else {
-                const response = await request.json();
-                setErrorMessage(response.message || "Failed to load IBT sheet data");
+                setErrorMessage(response.message);
                 setSheetDataTable(false);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
             setSheetDataTable(false);
         } finally {
             setViewSpinner(false);
@@ -229,7 +228,7 @@ export default function IBTSheetPrint() {
                     method: 'GET',
                     credentials: "include"
                 });
-            if (!response.ok) {
+            if (response.status !== 200) {
                 throw new Error('Export failed');
             }
 

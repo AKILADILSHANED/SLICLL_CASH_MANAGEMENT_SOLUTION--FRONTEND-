@@ -38,11 +38,10 @@ export default function RejectTransfers() {
                     credentials: "include",
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {                
                 setErrorMessage(response.message || "Failed to fetch transfers");
             } else {
-                const response = await request.json();
                 const transfers = response.responseObject || [];
                 setTransferData(transfers);
                 settransferDataTable(true);
@@ -56,7 +55,7 @@ export default function RejectTransfers() {
             }
 
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setViewSpinner(false);
         }
@@ -75,11 +74,10 @@ export default function RejectTransfers() {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {                
                 setErrorMessage(response.message || "Failed to reject transfer");
             } else {
-                const response = await request.json();
                 setSuccessMessage(response.message);
 
                 // Remove rejected transfer from list
@@ -99,7 +97,7 @@ export default function RejectTransfers() {
                 }, 5000);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setRejectingCheck(null);
         }
@@ -118,11 +116,10 @@ export default function RejectTransfers() {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {                
                 setErrorMessage(response.message || "Failed to reject transfer");
             } else {
-                const response = await request.json();
                 setSuccessMessage(response.message);
 
                 // Remove rejected transfer from list
@@ -142,7 +139,7 @@ export default function RejectTransfers() {
                 }, 5000);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setRejectingApproval(null);
         }

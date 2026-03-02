@@ -31,8 +31,8 @@ export default function CheckTransfer() {
           credentials: "include"
         }
       );
-      if (request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status === 200) {        
         const transfers = response.responseObject || [];
         setCheckList(transfers);
         setTotalPending(transfers.length);
@@ -44,10 +44,10 @@ export default function CheckTransfer() {
         setTotalAmount(total);
       } else {
         const response = await request.json();
-        setErrorMessage(response.message || "Failed to load transfer list");
+        setErrorMessage(response.message);
       }
     } catch (error) {
-      setErrorMessage("Unexpected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setLoading(false);
     }
@@ -71,8 +71,8 @@ export default function CheckTransfer() {
           credentials: "include"
         }
       );
-      if (request.ok) {
-        const response = await request.json();
+      const response = await request.json();
+      if (request.status === 200) {        
         await getTransferForChecking();
         setSuccessMessage(response.message);
 
@@ -81,11 +81,10 @@ export default function CheckTransfer() {
           setSuccessMessage("");
         }, 5000);
       } else {
-        const response = await request.json();
         setErrorMessage(response.message || "Failed to check transfer");
       }
     } catch (error) {
-      setErrorMessage("Unexpected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     } finally {
       setCheckingTransfer(null);
     }

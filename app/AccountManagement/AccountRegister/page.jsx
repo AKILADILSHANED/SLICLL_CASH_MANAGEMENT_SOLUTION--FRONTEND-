@@ -33,18 +33,14 @@ export default function RegisterAccount({ onCancel }) {
           credentials: "include"
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setBankList(response.responseObject);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setBankList(response.responseObject);
       } else {
-        setErrorMessage("Unable to fetch Bank List. Please contact administrator!");
+        setErrorMessage(response.message);
       }
     } catch (error) {
-      setErrorMessage("Un-expected error occurred. Please contact administrator!");
+      setErrorMessage("Response not received from server. Please contact administrator!");
     }
   }
 
@@ -86,8 +82,8 @@ export default function RegisterAccount({ onCancel }) {
             }),
           }
         );
-        if (request.ok) {
-          const response = await request.json();
+        const response = await request.json();
+        if (request.status === 200) {
           if (response.success == false) {
             setErrorMessage(response.message);
             setSpinner(false);
@@ -96,14 +92,12 @@ export default function RegisterAccount({ onCancel }) {
             setSpinner(false);
           }
         } else {
-          setErrorMessage(
-            "No response received from server. Please contact administrator!"
-          );
+          setErrorMessage(response.message);
           setSpinner(false);
         }
       } catch (error) {
         setErrorMessage(
-          error + " Un-expected error occurred. Please contact administrator!"
+          "No response received from server. Please contact administrator!"
         );
         setSpinner(false);
       }
@@ -290,7 +284,7 @@ export default function RegisterAccount({ onCancel }) {
 
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-gray-700">
-                    GL Code
+                    GL Code (SAP Main Account)
                     <span className="text-red-600 ml-1">*</span>
                   </label>
                   <div className="relative">

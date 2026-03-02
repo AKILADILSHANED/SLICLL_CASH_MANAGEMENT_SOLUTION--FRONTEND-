@@ -57,66 +57,53 @@ export default function UpdateUser({ onCancel }) {
       setUserDetailsWindow(false);
       return;
     }
-
     setLoader(true);
     setErrorMessageStatus(false);
     setSuccessMessageStatus(false);
-
     try {
       const request = await fetch(
-        `${baseUrl}/api/v1/user/user-search?userId=${encodeURIComponent(userId)}`,
+        `${baseUrl}/api/v1/user/user-search-for-update?userId=${encodeURIComponent(userId)}`,
         {
           method: "GET",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
         }
       );
+      const response = await request.json();
+      if (request.status === 200) {
+        // Set response values
+        const userData = response.responseObject;
+        setFirstName(userData.userFirstName);
+        setLastName(userData.userLastName);
+        setEpf(userData.userEpf);
+        setEmail(userData.userEmail);
+        setActiveStatus(userData.userActiveStatus);
+        setUserLevel(userData.userLevel);
+        setCreatedDate(userData.userCreatedDate);
+        setCreatedBy(userData.userCreateBy);
+        setUserPosition(userData.userPosition || "");
 
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success === true) {
-          // Set response values
-          const userData = response.responseObject;
-          setFirstName(userData.userFirstName);
-          setLastName(userData.userLastName);
-          setEpf(userData.userEpf);
-          setEmail(userData.userEmail);
-          setActiveStatus(userData.userActiveStatus);
-          setUserLevel(userData.userLevel);
-          setCreatedDate(userData.userCreatedDate);
-          setCreatedBy(userData.userCreateBy);
-          setUserPosition(userData.userPosition || "");
+        // Store original data for change detection
+        setOriginalData({
+          firstName: userData.userFirstName,
+          lastName: userData.userLastName,
+          epf: userData.userEpf,
+          email: userData.userEmail,
+          userPosition: userData.userPosition || ""
+        });
+        setUserDetailsWindow(true);
+        setImagePreview(null);
+        setSignatureImage(null);
+        setIsModified(false);
 
-          // Store original data for change detection
-          setOriginalData({
-            firstName: userData.userFirstName,
-            lastName: userData.userLastName,
-            epf: userData.userEpf,
-            email: userData.userEmail,
-            userPosition: userData.userPosition || ""
-          });
-
-          setUserDetailsWindow(true);
-          setImagePreview(null);
-          setSignatureImage(null);
-          setIsModified(false);
-        } else {
-          setErrorMessageStatus(true);
-          setMessage(response.message);
-          setUserDetailsWindow(false);
-        }
       } else {
-        if (request.status === 403) {
-          router.push("/AccessDenied");
-        } else {
-          setErrorMessageStatus(true);
-          setMessage("Server error. Please try again or contact administrator.");
-          setUserDetailsWindow(false);
-        }
+        setErrorMessageStatus(true);
+        setMessage(response.message);
+        setUserDetailsWindow(false);
       }
     } catch (error) {
       setErrorMessageStatus(true);
-      setMessage("Network error. Please check your connection and try again.");
+      setMessage("Response not received from server!");
       setUserDetailsWindow(false);
     } finally {
       setLoader(false);
@@ -191,30 +178,28 @@ export default function UpdateUser({ onCancel }) {
         }
       );
 
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success === true) {
-          setSuccessMessageStatus(true);
-          setMessage(response.message);
-          // Update original data after successful update
-          setOriginalData({ firstName, lastName, epf, email, userPosition });
-          setIsModified(false);
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessageStatus(true);
+        setMessage(response.message);
+        // Update original data after successful update
+        setOriginalData({ firstName, lastName, epf, email, userPosition });
+        setIsModified(false);
 
-          // Auto-hide success message after 5 seconds
-          setTimeout(() => {
-            setSuccessMessageStatus(false);
-          }, 5000);
-        } else {
-          setErrorMessageStatus(true);
-          setMessage(response.message);
-        }
+        // Auto-hide success message after 5 seconds
+        setTimeout(() => {
+          setSuccessMessageStatus(false);
+        }, 5000);
+      } else if (request.status === 500) {
+        setErrorMessageStatus(true);
+        setMessage(response.message);
       } else {
         setErrorMessageStatus(true);
-        setMessage("Unable to update user at this moment. Please contact administrator.");
+        setMessage(response.message);
       }
     } catch (error) {
       setErrorMessageStatus(true);
-      setMessage("Network error. Please check your connection and try again.");
+      setMessage("Response not received from server!");
     } finally {
       setUpdateLoader(false);
       setSignatureImage(null);
@@ -282,8 +267,8 @@ export default function UpdateUser({ onCancel }) {
     const isAdmin = level === "1" || level?.toLowerCase() === "administrator";
     return (
       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${isAdmin
-          ? 'bg-red-100 text-red-800'
-          : 'bg-green-100 text-green-800'
+        ? 'bg-red-100 text-red-800'
+        : 'bg-green-100 text-green-800'
         }`}>
         {getUserLevelText(level)}
       </span>
@@ -294,8 +279,8 @@ export default function UpdateUser({ onCancel }) {
     const isActive = status?.toString().toLowerCase() === "active" || status === "1";
     return (
       <span className={`px-2 py-1 text-xs font-semibold rounded-full ${isActive
-          ? 'bg-green-100 text-green-800'
-          : 'bg-red-100 text-red-800'
+        ? 'bg-green-100 text-green-800'
+        : 'bg-red-100 text-red-800'
         }`}>
         {isActive ? 'Active' : 'Inactive'}
       </span>
@@ -396,7 +381,7 @@ export default function UpdateUser({ onCancel }) {
               </button>
             </div>
           </div>
-        </div>
+        </div>       
 
         {/* User Update Form */}
         {userDetailsWindow && (
@@ -526,6 +511,7 @@ export default function UpdateUser({ onCancel }) {
                                  hover:border-blue-400 hover:shadow-sm outline-none"
                       >
                         <option value="">- Select Position -</option>
+                        <option value="Administrator">Administrator</option>
                         <option value="Finance Assistant">Finance Assistant</option>
                         <option value="Finance Executive">Finance Executive</option>
                         <option value="Insurance Assistant">Insurance Assistant</option>
@@ -646,19 +632,6 @@ export default function UpdateUser({ onCancel }) {
                         </div>
                       )}
                     </div>
-                    {/* Error Message */}
-                    {errorMessageStatus && (
-                      <div className="mt-6 animate-slideDown">
-                        <ErrorMessage messageValue={message} />
-                      </div>
-                    )}
-
-                    {/* Success Message */}
-                    {successMessageStatus && (
-                      <div className="mt-6 animate-slideDown">
-                        <SuccessMessage messageValue={message} />
-                      </div>
-                    )}
 
                     <div className="flex flex-wrap gap-3">
                       <button
@@ -666,8 +639,8 @@ export default function UpdateUser({ onCancel }) {
                         onClick={resetForm}
                         disabled={!isModified}
                         className={`px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200 flex items-center justify-center gap-2 ${isModified
-                            ? 'text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300'
-                            : 'text-gray-400 bg-gray-50 cursor-not-allowed'
+                          ? 'text-gray-700 bg-gray-100 hover:bg-gray-200 border border-gray-300'
+                          : 'text-gray-400 bg-gray-50 cursor-not-allowed'
                           }`}>
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
@@ -716,6 +689,22 @@ export default function UpdateUser({ onCancel }) {
             </div>
           </div>
         )}
+
+        <div>
+          {/* Error Message */}
+          {errorMessageStatus && (
+            <div className="mt-6 animate-slideDown">
+              <ErrorMessage messageValue={message} />
+            </div>
+          )}
+
+          {/* Success Message */}
+          {successMessageStatus && (
+            <div className="mt-6 animate-slideDown">
+              <SuccessMessage messageValue={message} />
+            </div>
+          )}
+        </div>
 
         {/* No Results Message */}
         {!userDetailsWindow && userId && !errorMessageStatus && (

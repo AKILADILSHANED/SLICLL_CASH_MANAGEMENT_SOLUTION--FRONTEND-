@@ -48,19 +48,14 @@ export default function NewRequest({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setLoadAccounts(response.success);
-        } else {
-          setAccountList(response.responseObject);
-          setLoadAccounts("");
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setAccountList(response.responseObject);
       } else {
-        setLoadAccounts("No response from server!");
+        setErrorMessage(response.message);
       }
     } catch (error) {
-      setLoadAccounts("Unexpected error occurred!");
+      setErrorMessage("Failed to load Bank Accounts. Please contact Administrator!");
     } finally {
       setAccountLoadingSpinner(false);
     }
@@ -74,19 +69,15 @@ export default function NewRequest({ onCancel }) {
         method: "GET",
         credentials: "include",
       });
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setLoadPayments(response.success);
-        } else {
-          setPaymentList(response.responseObject);
-          setLoadPayments("");
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setPaymentList(response.responseObject);
+        setLoadPayments("");
       } else {
-        setLoadPayments("No response from server!");
+        setErrorMessage(response.message);
       }
     } catch (error) {
-      setLoadPayments("Unexpected error occurred!");
+      setErrorMessage("Failed to load Payments. Please contact Administrator!");
     } finally {
       setPaymentLoadingSpinner(false);
     }
@@ -123,29 +114,25 @@ export default function NewRequest({ onCancel }) {
           }),
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setSuccessMessage(response.message);
-          // Reset form after successful submission
-          setTimeout(() => {
-            setBankAccount("");
-            setPaymentType("");
-            setRequestAmount("");
-            setRequestType("");
-            setSelectedDate(new Date().toLocaleDateString('en-CA'));
-          }, 2000);
-        }
-      } else {
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessage(response.message);
+        // Reset form after successful submission
+        setTimeout(() => {
+          setBankAccount("");
+          setPaymentType("");
+          setRequestAmount("");
+          setRequestType("");
+          setSelectedDate(new Date().toLocaleDateString('en-CA'));
+        }, 2000);
+      }else{
         setErrorMessage(
-          "No response from server. Please contact administrator!"
-        );
+        response.message
+      );
       }
     } catch (error) {
       setErrorMessage(
-        "Unexpected error occurred. Please contact administrator!"
+        "Response not received from server. Please contact administrator!"
       );
     } finally {
       setRequestSaveSpinner(false);

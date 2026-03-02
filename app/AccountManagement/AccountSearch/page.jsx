@@ -34,22 +34,18 @@ export default function SearchAccount() {
             credentials: "include",
           }
         );
-        if (request.ok) {
-          const response = await request.json();
-          if (response.success == false) {
-            setErrorMessage(response.message);
-          } else {
-            setResponseData(response.responseObject);
-            setAccountDetailsWindow(true);
-          }
+        const response = await request.json();
+        if (request.status === 200) {
+          setResponseData(response.responseObject);
+          setAccountDetailsWindow(true);
         } else {
           setErrorMessage(
-            "No response from server. Please contact administrator!"
+            response.message
           );
         }
       } catch (error) {
         setErrorMessage(
-          "Un-expected error occurred while fetching account data. Please contact administrator!"
+          "No respose received from server. Please contact administrator!"
         );
       } finally {
         setLoader(false);
