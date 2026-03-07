@@ -31,22 +31,18 @@ export default function PriorityLevel({ onCancel }) {
         method: "GET",
         credentials: "include",
       });
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setChannelData(response.responseObject);
-          setChannelDetailsWindow(true);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setChannelData(response.responseObject);
+        setChannelDetailsWindow(true);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "No response from server. Please contact administrator!"
       );
     } finally {
       setLoading(false);
@@ -80,23 +76,19 @@ export default function PriorityLevel({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setModalError(response.message);
-        } else {
-          setModal(false);
-          setSuccessMessage(response.message);
-          loadChannelData();
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setModal(false);
+        setSuccessMessage(response.message);
+        loadChannelData();
       } else {
         setModalError(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setModalError(
-        "Un-expected error occurred. Please contact administrator!"
+        "No response from server. Please contact administrator!"
       );
     } finally {
       setSaveSpinner(false);
@@ -121,17 +113,17 @@ export default function PriorityLevel({ onCancel }) {
           <div className="flex flex-col md:flex-row md:items-center justify-between">
             <div className="flex items-center space-x-3 mb-4 md:mb-0">
               <div className="bg-white/20 p-3 rounded-xl">
-                <svg 
-                  className="w-6 h-6 text-white" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth="2" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
                   ></path>
                 </svg>
@@ -150,17 +142,17 @@ export default function PriorityLevel({ onCancel }) {
               className="px-4 py-2 text-sm font-medium text-white bg-white/20 hover:bg-white/30 
                        rounded-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm"
             >
-              <svg 
-                className="w-4 h-4" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="2" 
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                 ></path>
               </svg>
@@ -184,14 +176,14 @@ export default function PriorityLevel({ onCancel }) {
               </div>
             </div>
           </div>
-          
-          
+
+
           <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-gray-600">Priority Range</p>
                 <p className="text-2xl font-bold text-gray-800 mt-1">
-                  {channelData.length > 0 
+                  {channelData.length > 0
                     ? `${Math.min(...channelData.map(item => item.priorityLevel))} - ${Math.max(...channelData.map(item => item.priorityLevel))}`
                     : '0-0'}
                 </p>
@@ -269,7 +261,7 @@ export default function PriorityLevel({ onCancel }) {
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {channelData.map((element, index) => (
-                    <tr 
+                    <tr
                       key={element.channelId}
                       className="hover:bg-gray-50 transition-colors duration-150"
                       style={{ animationDelay: `${index * 50}ms` }}
@@ -280,17 +272,17 @@ export default function PriorityLevel({ onCancel }) {
                           className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-2 group"
                         >
                           <div className="bg-blue-100 group-hover:bg-blue-200 p-2 rounded-lg transition-colors">
-                            <svg 
-                              className="w-4 h-4 text-blue-600" 
-                              fill="none" 
-                              stroke="currentColor" 
-                              viewBox="0 0 24 24" 
+                            <svg
+                              className="w-4 h-4 text-blue-600"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
                               xmlns="http://www.w3.org/2000/svg"
                             >
-                              <path 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                                strokeWidth="2" 
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                               ></path>
                             </svg>
@@ -309,30 +301,27 @@ export default function PriorityLevel({ onCancel }) {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="w-24 bg-gray-200 rounded-full h-2 mr-3 overflow-hidden">
-                            <div 
-                              className={`h-full rounded-full ${
-                                element.priorityLevel >= 8 ? 'bg-red-500' :
+                            <div
+                              className={`h-full rounded-full ${element.priorityLevel >= 8 ? 'bg-red-500' :
                                 element.priorityLevel >= 5 ? 'bg-yellow-500' :
-                                'bg-green-500'
-                              }`}
+                                  'bg-green-500'
+                                }`}
                               style={{ width: `${(element.priorityLevel / 10) * 100}%` }}
                             ></div>
                           </div>
-                          <span className={`text-sm font-semibold ${
-                            element.priorityLevel >= 8 ? 'text-red-600' :
+                          <span className={`text-sm font-semibold ${element.priorityLevel >= 8 ? 'text-red-600' :
                             element.priorityLevel >= 5 ? 'text-yellow-600' :
-                            'text-green-600'
-                          }`}>
+                              'text-green-600'
+                            }`}>
                             {element.priorityLevel}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                          element.deletedStatus === "YES" 
-                            ? 'bg-red-100 text-red-800' 
-                            : 'bg-green-100 text-green-800'
-                        }`}>
+                        <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${element.deletedStatus === "YES"
+                          ? 'bg-red-100 text-red-800'
+                          : 'bg-green-100 text-green-800'
+                          }`}>
                           {element.deletedStatus === "YES" ? "Deleted" : "Active"}
                         </span>
                       </td>
@@ -366,17 +355,17 @@ export default function PriorityLevel({ onCancel }) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
                     <div className="bg-white/20 p-2 rounded-lg">
-                      <svg 
-                        className="w-5 h-5 text-white" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24" 
+                      <svg
+                        className="w-5 h-5 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth="2" 
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
                           d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
                         ></path>
                       </svg>
@@ -389,17 +378,17 @@ export default function PriorityLevel({ onCancel }) {
                     onClick={modalClose}
                     className="text-white hover:text-gray-200 transition-colors"
                   >
-                    <svg 
-                      className="w-6 h-6" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24" 
+                    <svg
+                      className="w-6 h-6"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth="2" 
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M6 18L18 6M6 6l12 12"
                       ></path>
                     </svg>
@@ -414,17 +403,17 @@ export default function PriorityLevel({ onCancel }) {
               <div className="p-6">
                 <div className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4">
                   <div className="flex items-start">
-                    <svg 
-                      className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24" 
+                    <svg
+                      className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth="2" 
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                       ></path>
                     </svg>
@@ -447,17 +436,17 @@ export default function PriorityLevel({ onCancel }) {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <svg 
-                          className="w-5 h-5 text-gray-400" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24" 
+                        <svg
+                          className="w-5 h-5 text-gray-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth="2" 
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
                           ></path>
                         </svg>
@@ -482,17 +471,17 @@ export default function PriorityLevel({ onCancel }) {
                   {modalError && (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4 animate-slideDown">
                       <div className="flex items-center">
-                        <svg 
-                          className="w-5 h-5 text-red-600 mr-3" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24" 
+                        <svg
+                          className="w-5 h-5 text-red-600 mr-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth="2" 
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.998-.833-2.732 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z"
                           ></path>
                         </svg>
@@ -529,17 +518,17 @@ export default function PriorityLevel({ onCancel }) {
                     </>
                   ) : (
                     <>
-                      <svg 
-                        className="w-5 h-5" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24" 
+                      <svg
+                        className="w-5 h-5"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth="2" 
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
                           d="M5 13l4 4L19 7"
                         ></path>
                       </svg>

@@ -39,13 +39,11 @@ function RepoLetterContent() {
         if (request.status === 200) {
           setLetterComponent(true);
           setLetterData(response.responseObject[0]);
-        } else if (request.status === 409) {
-          setError(response.message);
         } else {
           setError(response.message);
         }
       } catch (error) {
-        setError("Unexpected error occurred. Please contact administrator!");
+        setError("Response not received from server. Please contact administrator!");
       } finally {
         setLoading(false);
       }

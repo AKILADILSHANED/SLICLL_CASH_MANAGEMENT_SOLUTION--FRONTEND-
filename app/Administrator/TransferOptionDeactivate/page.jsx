@@ -29,16 +29,15 @@ export default function TransferOptionDeactivate() {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {                
                 setErrorMessage(response.message);
             } else {
-                const response = await request.json();
                 setTransferOptions(response.responseObject);
                 setErrorMessage("");
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact the administrator!");
+            setErrorMessage("Response not received from server. Please contact the administrator!");
         } finally {
             setLoading(false);
         }
@@ -53,7 +52,6 @@ export default function TransferOptionDeactivate() {
         if (!window.confirm(`Are you sure you want to deactivate this transfer option?\n\nFrom: ${fromAccount}\nTo: ${toAccount}\nChannel: ${channel}\n\nThis action cannot be undone.`)) {
             return;
         }
-
         try {
             setDeactivatingId(optionId);
             setDeactivateSpinner(true);
@@ -66,16 +64,15 @@ export default function TransferOptionDeactivate() {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {                
                 setErrorMessage(response.message);
-            } else {
-                const response = await request.json();                
+            } else {        
                 setSuccessMessage(response.message);
                 await handleFetchOptions(); //Page will be reloaded;
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setDeactivateSpinner(false);
             setDeactivatingId(null);

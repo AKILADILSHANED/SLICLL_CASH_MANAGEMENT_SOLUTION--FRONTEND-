@@ -29,16 +29,15 @@ export default function TransferOptionReactivate() {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {
                 setErrorMessage(response.message);
             } else {
-                const response = await request.json();
                 setTransferOptions(response.responseObject);
                 setErrorMessage("");
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact the administrator!");
+            setErrorMessage("Response not received from server. Please contact the administrator!");
         } finally {
             setLoading(false);
         }
@@ -66,16 +65,15 @@ export default function TransferOptionReactivate() {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {
                 setErrorMessage(response.message);
             } else {
-                const response = await request.json();
                 setSuccessMessage(response.message);
                 await handleFetchOptions(); //Page will be reloaded;
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setReactivateSpinner(false);
             setReactivatingId(null);
@@ -90,17 +88,17 @@ export default function TransferOptionReactivate() {
                     <div className="flex flex-col md:flex-row md:items-center justify-between">
                         <div className="flex items-center space-x-3 mb-4 md:mb-0">
                             <div className="bg-white/20 p-3 rounded-xl">
-                                <svg 
-                                    className="w-6 h-6 text-white" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24" 
+                                <svg
+                                    className="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth="2" 
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"
                                     ></path>
                                 </svg>
@@ -119,17 +117,17 @@ export default function TransferOptionReactivate() {
                             className="px-4 py-2 text-sm font-medium text-white bg-white/20 hover:bg-white/30 
                                      rounded-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm"
                         >
-                            <svg 
-                                className="w-4 h-4" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24" 
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth="2" 
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
                                     d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                                 ></path>
                             </svg>
@@ -153,7 +151,7 @@ export default function TransferOptionReactivate() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4">
                         <div className="flex items-center justify-between">
                             <div>
@@ -174,7 +172,7 @@ export default function TransferOptionReactivate() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4">
                         <div className="flex items-center justify-between">
                             <div>
@@ -190,7 +188,7 @@ export default function TransferOptionReactivate() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4">
                         <div className="flex items-center justify-between">
                             <div>
@@ -225,17 +223,17 @@ export default function TransferOptionReactivate() {
                     <div className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 animate-slideDown">
                         <div className="flex items-start">
                             <div className="bg-green-100 p-2 rounded-lg mr-3">
-                                <svg 
-                                    className="w-6 h-6 text-green-600" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24" 
+                                <svg
+                                    className="w-6 h-6 text-green-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth="2" 
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                     ></path>
                                 </svg>
@@ -316,7 +314,7 @@ export default function TransferOptionReactivate() {
                                         };
 
                                         return (
-                                            <tr 
+                                            <tr
                                                 key={element.optionId}
                                                 className="hover:bg-gray-50 transition-colors duration-150"
                                                 style={{ animationDelay: `${index * 50}ms` }}
@@ -338,17 +336,17 @@ export default function TransferOptionReactivate() {
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <div className="bg-blue-100 p-2 rounded-lg mr-3">
-                                                            <svg 
-                                                                className="w-4 h-4 text-blue-600" 
-                                                                fill="none" 
-                                                                stroke="currentColor" 
-                                                                viewBox="0 0 24 24" 
+                                                            <svg
+                                                                className="w-4 h-4 text-blue-600"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
                                                                 xmlns="http://www.w3.org/2000/svg"
                                                             >
-                                                                <path 
-                                                                    strokeLinecap="round" 
-                                                                    strokeLinejoin="round" 
-                                                                    strokeWidth="2" 
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth="2"
                                                                     d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                                                                 ></path>
                                                             </svg>
@@ -361,17 +359,17 @@ export default function TransferOptionReactivate() {
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <div className="bg-purple-100 p-2 rounded-lg mr-3">
-                                                            <svg 
-                                                                className="w-4 h-4 text-purple-600" 
-                                                                fill="none" 
-                                                                stroke="currentColor" 
-                                                                viewBox="0 0 24 24" 
+                                                            <svg
+                                                                className="w-4 h-4 text-purple-600"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
                                                                 xmlns="http://www.w3.org/2000/svg"
                                                             >
-                                                                <path 
-                                                                    strokeLinecap="round" 
-                                                                    strokeLinejoin="round" 
-                                                                    strokeWidth="2" 
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth="2"
                                                                     d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                                                                 ></path>
                                                             </svg>
@@ -384,17 +382,17 @@ export default function TransferOptionReactivate() {
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <div className="flex items-center">
                                                         <div className="bg-indigo-100 p-2 rounded-lg mr-3">
-                                                            <svg 
-                                                                className="w-4 h-4 text-indigo-600" 
-                                                                fill="none" 
-                                                                stroke="currentColor" 
-                                                                viewBox="0 0 24 24" 
+                                                            <svg
+                                                                className="w-4 h-4 text-indigo-600"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
                                                                 xmlns="http://www.w3.org/2000/svg"
                                                             >
-                                                                <path 
-                                                                    strokeLinecap="round" 
-                                                                    strokeLinejoin="round" 
-                                                                    strokeWidth="2" 
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth="2"
                                                                     d="M13 10V3L4 14h7v7l9-11h-7z"
                                                                 ></path>
                                                             </svg>
@@ -417,14 +415,14 @@ export default function TransferOptionReactivate() {
                                                     </div>
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <button 
+                                                    <button
                                                         onClick={() => handleOptionReactivate(
-                                                            element.optionId, 
-                                                            element.fromAccount, 
-                                                            element.toAccount, 
+                                                            element.optionId,
+                                                            element.fromAccount,
+                                                            element.toAccount,
                                                             element.transferChannel
-                                                        )} 
-                                                        type="button" 
+                                                        )}
+                                                        type="button"
                                                         disabled={reactivateSpinner && reactivatingId === element.optionId}
                                                         className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-700 
                                                                  rounded-lg hover:from-green-700 hover:to-green-800 focus:ring-4 focus:ring-green-300 
@@ -439,17 +437,17 @@ export default function TransferOptionReactivate() {
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <svg 
-                                                                    className="w-5 h-5" 
-                                                                    fill="none" 
-                                                                    stroke="currentColor" 
-                                                                    viewBox="0 0 24 24" 
+                                                                <svg
+                                                                    className="w-5 h-5"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    viewBox="0 0 24 24"
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                 >
-                                                                    <path 
-                                                                        strokeLinecap="round" 
-                                                                        strokeLinejoin="round" 
-                                                                        strokeWidth="2" 
+                                                                    <path
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                        strokeWidth="2"
                                                                         d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7l-2 1m2-1l-2-1m2 1v2.5M14 4l-2-1-2 1M4 7l2-1M4 7l2 1M4 7v2.5M12 21l-2-1m2 1l2-1m-2 1v-2.5M6 18l-2-1v-2.5M18 18l2-1v-2.5"
                                                                     ></path>
                                                                 </svg>
@@ -487,9 +485,9 @@ export default function TransferOptionReactivate() {
                         <div className="px-6 py-4 bg-gradient-to-r from-gray-50 to-green-50 border-t border-gray-200">
                             <div className="flex items-center justify-between">
                                 <div className="text-sm text-gray-600">
-                                    Last updated: {new Date().toLocaleTimeString('en-US', { 
-                                        hour: '2-digit', 
-                                        minute: '2-digit' 
+                                    Last updated: {new Date().toLocaleTimeString('en-US', {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
                                     })}
                                 </div>
                                 <div className="text-sm text-gray-600">

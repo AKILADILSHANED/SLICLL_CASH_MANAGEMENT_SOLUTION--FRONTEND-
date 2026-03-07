@@ -57,17 +57,16 @@ function CashFlowContent() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 setCashFlowComponent(true);
                 setRepoOpeningBlance(response.responseObject);
             } else {
-                const response = await request.json();
                 setError(response.message);
             }
         } catch (error) {
             console.log(error);
-            setError("Unexpected error occurred. Please contact administrator!");
+            setError("Response not received from server. Please contact administrator!");
         }
     }
 
@@ -88,17 +87,16 @@ function CashFlowContent() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 setCashFlowComponent(true);
                 setAccountBalanceList(response.responseObject);
             } else {
-                const response = await request.json();
                 setError(response.message);
             }
         } catch (error) {
             console.log(error);
-            setError("Unexpected error occurred. Please contact administrator!");
+            setError("Response not received from server. Please contact administrator!");
         }
     }
 
@@ -119,17 +117,16 @@ function CashFlowContent() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 setCashFlowComponent(true);
                 setFundRequestList(response.responseObject);
             } else {
-                const response = await request.json();
                 setError(response.message);
             }
         } catch (error) {
             console.log(error);
-            setError("Unexpected error occurred. Please contact administrator!");
+            setError("Response not received from server. Please contact administrator!");
         }
     }
 
@@ -150,17 +147,16 @@ function CashFlowContent() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 setCashFlowComponent(true);
                 setRepoClosingBlance(response.responseObject);
             } else {
-                const response = await request.json();
                 setError(response.message);
             }
         } catch (error) {
             console.log(error);
-            setError("Unexpected error occurred. Please contact administrator!");
+            setError("Response not received from server. Please contact administrator!");
         }
     }
 
@@ -181,17 +177,15 @@ function CashFlowContent() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {
                 setCashFlowComponent(true);
                 setOverdraftBalances(response.responseObject);
             } else {
-                const response = await request.json();
                 setError(response.message);
             }
         } catch (error) {
-            console.log(error);
-            setError("Unexpected error occurred. Please contact administrator!");
+            setError("Response not received from server. Please contact administrator!");
         } finally {
             setLoading(false);
         }
@@ -688,7 +682,7 @@ export default function DisplayCashFlow() {
 
     return (
         <Suspense fallback={<div>Cash Flow is being generated...</div>}>
-            <CashFlowContent/>
+            <CashFlowContent />
         </Suspense>
     )
 }

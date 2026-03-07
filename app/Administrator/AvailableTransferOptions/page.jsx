@@ -25,20 +25,15 @@ export default function AvailableTransferOptions() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message)
-                } else {
-                    setTransferOptions(response.responseObject);
-                    setErrorMessage("");
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setTransferOptions(response.responseObject);
+                setErrorMessage("");
             } else {
-                const response = await request.json();
-                setErrorMessage(response.message || "Failed to load transfer options");
+                setErrorMessage(response.message);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact the administrator!");
+            setErrorMessage("Response not received from server. Please contact the administrator!");
         } finally {
             setLoading(false);
         }

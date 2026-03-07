@@ -24,21 +24,17 @@ export default function ChannelDetails() {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setChannelData(response.responseObject);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setChannelData(response.responseObject);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "No response from server. Please contact administrator!"
       );
     } finally {
       setIsLoading(false);

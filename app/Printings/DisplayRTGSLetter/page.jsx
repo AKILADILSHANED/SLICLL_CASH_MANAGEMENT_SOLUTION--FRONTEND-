@@ -37,16 +37,15 @@ function RTGCLetterContent() {
                     }
                 );
 
-                if (request.ok) {
-                    const response = await request.json();
+                const response = await request.json();
+                if (request.status === 200) {                    
                     setLetterComponent(true);
                     setLetterData(response.responseObject);
                 } else {
-                    const response = await request.json();
                     setError(response.message);
                 }
             } catch (error) {
-                setError("Unexpected error occurred. Please contact administrator!");
+                setError("Response not received from server. Please contact administrator!");
             } finally {
                 setLoading(false);
             }

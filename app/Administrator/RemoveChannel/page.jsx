@@ -33,22 +33,18 @@ export default function RemoveChannel({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-          setErrorMessage(response.message);
-        } else {
-          setChannelData(response.responseObject);
-          setChannelDataWindow(true);
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setChannelData(response.responseObject);
+        setChannelDataWindow(true);
       } else {
         setErrorMessage(
-          "No response from server. Please contact administrator!"
+          response.message
         );
       }
     } catch (error) {
       setErrorMessage(
-        "Un-expected error occurred. Please contact administrator!"
+        "No response from server. Please contact administrator!"
       );
     } finally {
       setSearchSpinner(false);
@@ -60,7 +56,7 @@ export default function RemoveChannel({ onCancel }) {
     if (!window.confirm("Are you sure you want to delete this channel? This action cannot be undone.")) {
       return;
     }
-    
+
     setDeleteSpinner(true);
     try {
       const request = await fetch(
@@ -70,22 +66,18 @@ export default function RemoveChannel({ onCancel }) {
           credentials: "include",
         }
       );
-      if (request.ok) {
-        const response = await request.json();
-        if (response.success == false) {
-            setErrorMessage(response.message);
-        } else {
-            setSuccessMessage(response.message);
-            setChannelDataWindow(false);
-            setChannelId("");
-        }
+      const response = await request.json();
+      if (request.status === 200) {
+        setSuccessMessage(response.message);
+        setChannelDataWindow(false);
+        setChannelId("");
       } else {
-        setErrorMessage("No response from server. Please contact administrator!");
+        response.message
       }
     } catch (error) {
-        setErrorMessage("Un-expected error occurred. Please contact administrator!");
-    }finally{
-        setDeleteSpinner(false);
+      setErrorMessage("No response from server. Please contact administrator!");
+    } finally {
+      setDeleteSpinner(false);
     }
   };
 
@@ -104,17 +96,17 @@ export default function RemoveChannel({ onCancel }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="bg-white/20 p-3 rounded-xl">
-                <svg 
-                  className="w-6 h-6 text-white" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24" 
+                <svg
+                  className="w-6 h-6 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth="2" 
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                   ></path>
                 </svg>
@@ -133,17 +125,17 @@ export default function RemoveChannel({ onCancel }) {
               className="px-4 py-2 text-sm font-medium text-white bg-white/20 hover:bg-white/30 
                        rounded-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm"
             >
-              <svg 
-                className="w-4 h-4" 
-                fill="none" 
-                stroke="currentColor" 
-                viewBox="0 0 24 24" 
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <path 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round" 
-                  strokeWidth="2" 
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
                   d="M6 18L18 6M6 6l12 12"
                 ></path>
               </svg>
@@ -162,7 +154,7 @@ export default function RemoveChannel({ onCancel }) {
             <p className="text-sm text-gray-600 mb-6">
               Enter the Channel ID to search for deletion
             </p>
-            
+
             <form onSubmit={handleSearch}>
               <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
                 <div className="flex-1">
@@ -171,17 +163,17 @@ export default function RemoveChannel({ onCancel }) {
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <svg 
-                        className="w-5 h-5 text-gray-400" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24" 
+                      <svg
+                        className="w-5 h-5 text-gray-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg"
                       >
-                        <path 
-                          strokeLinecap="round" 
-                          strokeLinejoin="round" 
-                          strokeWidth="2" 
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
                           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                         ></path>
                       </svg>
@@ -200,7 +192,7 @@ export default function RemoveChannel({ onCancel }) {
                     />
                   </div>
                 </div>
-                
+
                 <div className="flex gap-3">
                   <button
                     type="submit"
@@ -218,17 +210,17 @@ export default function RemoveChannel({ onCancel }) {
                       </>
                     ) : (
                       <>
-                        <svg 
-                          className="w-5 h-5" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24" 
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth="2" 
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                           ></path>
                         </svg>
@@ -246,17 +238,17 @@ export default function RemoveChannel({ onCancel }) {
                              active:translate-y-0 shadow-md hover:shadow-lg flex items-center justify-center gap-2
                              min-w-[120px]"
                   >
-                    <svg 
-                      className="w-5 h-5" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24" 
+                    <svg
+                      className="w-5 h-5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <path 
-                        strokeLinecap="round" 
-                        strokeLinejoin="round" 
-                        strokeWidth="2" 
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="M6 18L18 6M6 6l12 12"
                       ></path>
                     </svg>
@@ -272,17 +264,17 @@ export default function RemoveChannel({ onCancel }) {
             <div className="mb-6 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 animate-slideDown">
               <div className="flex items-start">
                 <div className="bg-red-100 p-2 rounded-lg mr-3">
-                  <svg 
-                    className="w-6 h-6 text-red-600" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24" 
+                  <svg
+                    className="w-6 h-6 text-red-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="2" 
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.998-.833-2.732 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z"
                     ></path>
                   </svg>
@@ -311,23 +303,23 @@ export default function RemoveChannel({ onCancel }) {
                   Review the channel details before deletion
                 </p>
               </div>
-              
+
               <div className="overflow-hidden rounded-lg border border-gray-200 shadow-sm">
                 <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-4 border-b border-gray-200">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <div className="bg-blue-100 p-2 rounded-lg mr-3">
-                        <svg 
-                          className="w-5 h-5 text-blue-600" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          viewBox="0 0 24 24" 
+                        <svg
+                          className="w-5 h-5 text-blue-600"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                           xmlns="http://www.w3.org/2000/svg"
                         >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth="2" 
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           ></path>
                         </svg>
@@ -346,7 +338,7 @@ export default function RemoveChannel({ onCancel }) {
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="bg-white">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-6">
                     <div className="space-y-1">
@@ -368,11 +360,10 @@ export default function RemoveChannel({ onCancel }) {
                     <div className="space-y-1">
                       <p className="text-xs font-medium text-gray-500">Priority Level</p>
                       <div className="flex items-center">
-                        <div className={`h-2 w-12 rounded-full mr-2 ${
-                          channelData.priorityLevel >= 8 ? 'bg-red-500' :
+                        <div className={`h-2 w-12 rounded-full mr-2 ${channelData.priorityLevel >= 8 ? 'bg-red-500' :
                           channelData.priorityLevel >= 5 ? 'bg-yellow-500' :
-                          'bg-green-500'
-                        }`}></div>
+                            'bg-green-500'
+                          }`}></div>
                         <span className="text-sm font-semibold text-gray-800">
                           {channelData.priorityLevel}
                         </span>
@@ -393,10 +384,10 @@ export default function RemoveChannel({ onCancel }) {
                       <p className="text-sm font-semibold text-gray-800">{channelData.definedBy}</p>
                     </div>
                   </div>
-                  
+
                   <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
                     <div className="flex justify-end">
-                      <button 
+                      <button
                         onClick={handleRemove}
                         disabled={deleteSpinner}
                         className="px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-red-700 
@@ -412,17 +403,17 @@ export default function RemoveChannel({ onCancel }) {
                           </>
                         ) : (
                           <>
-                            <svg 
-                              className="w-5 h-5" 
-                              fill="none" 
-                              stroke="currentColor" 
-                              viewBox="0 0 24 24" 
+                            <svg
+                              className="w-5 h-5"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
                               xmlns="http://www.w3.org/2000/svg"
                             >
-                              <path 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                                strokeWidth="2" 
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                               ></path>
                             </svg>
@@ -454,17 +445,17 @@ export default function RemoveChannel({ onCancel }) {
             <div className="mt-8 bg-white border border-gray-200 rounded-xl shadow-lg p-8 text-center">
               <div className="max-w-md mx-auto">
                 <div className="bg-gradient-to-r from-red-100 to-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                  <svg 
-                    className="w-8 h-8 text-red-600" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24" 
+                  <svg
+                    className="w-8 h-8 text-red-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth="2" 
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                     ></path>
                   </svg>

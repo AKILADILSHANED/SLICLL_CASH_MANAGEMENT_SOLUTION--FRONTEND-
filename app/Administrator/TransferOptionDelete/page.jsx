@@ -36,21 +36,17 @@ export default function TransferOptionDelete() {
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setFromAccountList(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setFromAccountList(response.responseObject);
             } else {
                 setErrorMessage(
-                    "Unable to load Account Numbers. Please contact administrator!"
+                    response.message
                 );
             }
         } catch (error) {
             setErrorMessage(
-                "Un-expected error occurred. Please contact administrator!"
+                "Response not received from server. Please contact administrator!"
             );
         } finally {
             setLoadingAccounts(false);
@@ -71,21 +67,17 @@ export default function TransferOptionDelete() {
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setToAccountList(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setToAccountList(response.responseObject);
             } else {
                 setErrorMessage(
-                    "Unable to load Account Numbers. Please contact administrator!"
+                    response.message
                 );
             }
         } catch (error) {
             setErrorMessage(
-                "Un-expected error occurred. Please contact administrator!"
+                "Response not received from server. Please contact administrator!"
             );
         }
     }
@@ -98,25 +90,21 @@ export default function TransferOptionDelete() {
     const getChanells = async () => {
         setLoadingChannels(true);
         try {
-            const request = await fetch(`${baseUrl}/api/v1/channel/define-options`, {
+            const request = await fetch(`${baseUrl}/api/v1/channel/delete-options`, {
                 method: "GET",
                 credentials: "include",
             });
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setChanelList(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setChanelList(response.responseObject);
             } else {
                 setErrorMessage(
-                    "Unable to load Channel Details. Please contact administrator!"
+                    response.message
                 );
             }
         } catch (error) {
             setErrorMessage(
-                "Un-expected error occurred. Please contact administrator!"
+                "Response not received from server. Please contact administrator!"
             );
         } finally {
             setLoadingChannels(false);
@@ -142,19 +130,16 @@ export default function TransferOptionDelete() {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                    return;
-                }
+            const response = await request.json();
+            if (request.status !== 200) {
+                setErrorMessage(response.message);
+                return;
             } else {
-                const response = await request.json();
                 setTransferOption(response.responseObject)
                 setOptionDetailsTable(true);
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setViewSpinner(false);
         }
@@ -177,11 +162,10 @@ export default function TransferOptionDelete() {
                     credentials: "include"
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {                
                 setErrorMessage(response.message);
             } else {
-                const response = await request.json();
                 setSuccessMessage(response.message);
                 setOptionDetailsTable(false);
                 setFromAccountId("");
@@ -189,7 +173,7 @@ export default function TransferOptionDelete() {
                 setChanelId("");
             }
         } catch (error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setDeleteSpriner(false);
         }
@@ -213,17 +197,17 @@ export default function TransferOptionDelete() {
                     <div className="flex flex-col md:flex-row md:items-center justify-between">
                         <div className="flex items-center space-x-3 mb-4 md:mb-0">
                             <div className="bg-white/20 p-3 rounded-xl">
-                                <svg 
-                                    className="w-6 h-6 text-white" 
-                                    fill="none" 
-                                    stroke="currentColor" 
-                                    viewBox="0 0 24 24" 
+                                <svg
+                                    className="w-6 h-6 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
                                     xmlns="http://www.w3.org/2000/svg"
                                 >
-                                    <path 
-                                        strokeLinecap="round" 
-                                        strokeLinejoin="round" 
-                                        strokeWidth="2" 
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                     ></path>
                                 </svg>
@@ -242,17 +226,17 @@ export default function TransferOptionDelete() {
                             className="px-4 py-2 text-sm font-medium text-white bg-white/20 hover:bg-white/30 
                                      rounded-lg transition-all duration-200 flex items-center gap-2 backdrop-blur-sm"
                         >
-                            <svg 
-                                className="w-4 h-4" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24" 
+                            <svg
+                                className="w-4 h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth="2" 
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
                                     d="M6 18L18 6M6 6l12 12"
                                 ></path>
                             </svg>
@@ -276,7 +260,7 @@ export default function TransferOptionDelete() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4">
                         <div className="flex items-center justify-between">
                             <div>
@@ -290,7 +274,7 @@ export default function TransferOptionDelete() {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4">
                         <div className="flex items-center justify-between">
                             <div>
@@ -312,17 +296,17 @@ export default function TransferOptionDelete() {
                 <div className="mb-6 bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 animate-slideDown">
                     <div className="flex items-start">
                         <div className="bg-red-100 p-2 rounded-lg mr-3">
-                            <svg 
-                                className="w-6 h-6 text-red-600" 
-                                fill="none" 
-                                stroke="currentColor" 
-                                viewBox="0 0 24 24" 
+                            <svg
+                                className="w-6 h-6 text-red-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
                                 xmlns="http://www.w3.org/2000/svg"
                             >
-                                <path 
-                                    strokeLinecap="round" 
-                                    strokeLinejoin="round" 
-                                    strokeWidth="2" 
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
                                     d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.998-.833-2.732 0L4.732 16.5c-.77.833.192 2.5 1.732 2.5z"
                                 ></path>
                             </svg>
@@ -332,7 +316,7 @@ export default function TransferOptionDelete() {
                                 ⚠️ Permanent Deletion Warning
                             </h4>
                             <p className="text-sm text-red-700">
-                                Deleting a transfer option is permanent and cannot be undone. 
+                                Deleting a transfer option is permanent and cannot be undone.
                                 This will completely remove the option from the system and all associated data.
                                 Make sure you have selected the correct option before proceeding.
                             </p>
@@ -362,7 +346,7 @@ export default function TransferOptionDelete() {
                         <p className="text-sm text-gray-600 mb-6">
                             Select accounts and channel to find the transfer option for deletion
                         </p>
-                        
+
                         <form onSubmit={displayOptionDetails}>
                             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                                 {/* From Account Selection */}
@@ -372,17 +356,17 @@ export default function TransferOptionDelete() {
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-400" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5 text-gray-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                                                 ></path>
                                             </svg>
@@ -418,17 +402,17 @@ export default function TransferOptionDelete() {
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-400" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5 text-gray-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                                                 ></path>
                                             </svg>
@@ -459,17 +443,17 @@ export default function TransferOptionDelete() {
                                     </label>
                                     <div className="relative">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <svg 
-                                                className="w-5 h-5 text-gray-400" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5 text-gray-400"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M13 10V3L4 14h7v7l9-11h-7z"
                                                 ></path>
                                             </svg>
@@ -517,17 +501,17 @@ export default function TransferOptionDelete() {
                                         </>
                                     ) : (
                                         <>
-                                            <svg 
-                                                className="w-5 h-5" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                                 ></path>
                                             </svg>
@@ -550,22 +534,22 @@ export default function TransferOptionDelete() {
                                     Review the option details before permanent deletion
                                 </p>
                             </div>
-                            
+
                             <div className="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-xl shadow-lg overflow-hidden">
                                 <div className="bg-gradient-to-r from-red-600 to-red-700 px-6 py-4">
                                     <div className="flex items-center">
                                         <div className="bg-white/20 p-2 rounded-lg mr-3">
-                                            <svg 
-                                                className="w-5 h-5 text-white" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24" 
+                                            <svg
+                                                className="w-5 h-5 text-white"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
                                                 xmlns="http://www.w3.org/2000/svg"
                                             >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth="2" 
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
                                                     d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                                 ></path>
                                             </svg>
@@ -580,7 +564,7 @@ export default function TransferOptionDelete() {
                                         </div>
                                     </div>
                                 </div>
-                                
+
                                 <div className="p-6">
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                         <div className="space-y-1">
@@ -607,17 +591,17 @@ export default function TransferOptionDelete() {
                                             <p className="text-xs font-medium text-gray-500">From Account</p>
                                             <div className="flex items-center">
                                                 <div className="bg-blue-100 p-2 rounded-lg mr-2">
-                                                    <svg 
-                                                        className="w-4 h-4 text-blue-600" 
-                                                        fill="none" 
-                                                        stroke="currentColor" 
-                                                        viewBox="0 0 24 24" 
+                                                    <svg
+                                                        className="w-4 h-4 text-blue-600"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
                                                         xmlns="http://www.w3.org/2000/svg"
                                                     >
-                                                        <path 
-                                                            strokeLinecap="round" 
-                                                            strokeLinejoin="round" 
-                                                            strokeWidth="2" 
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
                                                             d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                                                         ></path>
                                                     </svg>
@@ -629,17 +613,17 @@ export default function TransferOptionDelete() {
                                             <p className="text-xs font-medium text-gray-500">To Account</p>
                                             <div className="flex items-center">
                                                 <div className="bg-green-100 p-2 rounded-lg mr-2">
-                                                    <svg 
-                                                        className="w-4 h-4 text-green-600" 
-                                                        fill="none" 
-                                                        stroke="currentColor" 
-                                                        viewBox="0 0 24 24" 
+                                                    <svg
+                                                        className="w-4 h-4 text-green-600"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
                                                         xmlns="http://www.w3.org/2000/svg"
                                                     >
-                                                        <path 
-                                                            strokeLinecap="round" 
-                                                            strokeLinejoin="round" 
-                                                            strokeWidth="2" 
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
                                                             d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
                                                         ></path>
                                                     </svg>
@@ -651,17 +635,17 @@ export default function TransferOptionDelete() {
                                             <p className="text-xs font-medium text-gray-500">Transfer Channel</p>
                                             <div className="flex items-center">
                                                 <div className="bg-purple-100 p-2 rounded-lg mr-2">
-                                                    <svg 
-                                                        className="w-4 h-4 text-purple-600" 
-                                                        fill="none" 
-                                                        stroke="currentColor" 
-                                                        viewBox="0 0 24 24" 
+                                                    <svg
+                                                        className="w-4 h-4 text-purple-600"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        viewBox="0 0 24 24"
                                                         xmlns="http://www.w3.org/2000/svg"
                                                     >
-                                                        <path 
-                                                            strokeLinecap="round" 
-                                                            strokeLinejoin="round" 
-                                                            strokeWidth="2" 
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
                                                             d="M13 10V3L4 14h7v7l9-11h-7z"
                                                         ></path>
                                                     </svg>
@@ -670,14 +654,14 @@ export default function TransferOptionDelete() {
                                             </div>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="mt-8 pt-6 border-t border-red-200">
                                         <div className="flex justify-center">
-                                            <button 
+                                            <button
                                                 onClick={() => handleOptionDelete(
-                                                    transferOption.optionId, 
-                                                    transferOption.fromAccount, 
-                                                    transferOption.toAccount, 
+                                                    transferOption.optionId,
+                                                    transferOption.fromAccount,
+                                                    transferOption.toAccount,
                                                     transferOption.transferChannel
                                                 )}
                                                 disabled={deleteSpriner}
@@ -694,17 +678,17 @@ export default function TransferOptionDelete() {
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <svg 
-                                                            className="w-5 h-5" 
-                                                            fill="none" 
-                                                            stroke="currentColor" 
-                                                            viewBox="0 0 24 24" 
+                                                        <svg
+                                                            className="w-5 h-5"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            viewBox="0 0 24 24"
                                                             xmlns="http://www.w3.org/2000/svg"
                                                         >
-                                                            <path 
-                                                                strokeLinecap="round" 
-                                                                strokeLinejoin="round" 
-                                                                strokeWidth="2" 
+                                                            <path
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                                strokeWidth="2"
                                                                 d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                                             ></path>
                                                         </svg>
@@ -724,17 +708,17 @@ export default function TransferOptionDelete() {
                         <div className="mt-8 bg-white border border-gray-200 rounded-xl shadow-lg p-8 text-center">
                             <div className="max-w-md mx-auto">
                                 <div className="bg-gradient-to-r from-red-100 to-blue-100 p-4 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                                    <svg 
-                                        className="w-8 h-8 text-red-600" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24" 
+                                    <svg
+                                        className="w-8 h-8 text-red-600"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth="2" 
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
                                             d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                                         ></path>
                                     </svg>

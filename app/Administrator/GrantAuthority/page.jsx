@@ -29,7 +29,7 @@ export default function GrantAuthority({ onCancel }) {
         setLoadingUsers(true);
         try {
             const request = await fetch(
-                `${baseUrl}/api/v1/user/userList`,
+                `${baseUrl}/api/v1/user/userList-authority-grant`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -45,7 +45,7 @@ export default function GrantAuthority({ onCancel }) {
             }
         } catch (error) {
             setErrorMessage(
-                "Un-expected error occurred. Please contact administrator!"
+                "Response not received from server. Please contact administrator!"
             );
         } finally {
             setLoadingUsers(false);
@@ -61,27 +61,23 @@ export default function GrantAuthority({ onCancel }) {
         setLoadingModules(true);
         try {
             const request = await fetch(
-                `${baseUrl}/api/v1/module/getModuleList`,
+                `${baseUrl}/api/v1/module/get-module-list-grant-authority`,
                 {
                     method: "GET",
                     credentials: "include",
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
-                if (response.success == false) {
-                    setErrorMessage(response.message);
-                } else {
-                    setModuleList(response.responseObject);
-                }
+            const response = await request.json();
+            if (request.status === 200) {
+                setModuleList(response.responseObject);
             } else {
                 setErrorMessage(
-                    "Unable to load Modules. Please contact administrator!"
+                    response.message
                 );
             }
         } catch (error) {
             setErrorMessage(
-                "Un-expected error occurred. Please contact administrator!"
+                "Response not received from server. Please contact administrator!"
             );
         } finally {
             setLoadingModules(false);
@@ -117,16 +113,15 @@ export default function GrantAuthority({ onCancel }) {
                     credentials: "include",
                 }
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {                
                 setErrorMessage(response.message);
             } else {
-                const response = await request.json();
                 setAvailableFunctionList(response.responseObject)
                 setFunctionTable(true);
             }
         } catch (Error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setSearchSpinner(false);
         }
@@ -155,12 +150,11 @@ export default function GrantAuthority({ onCancel }) {
                     }),
                 },
             );
-            if (!request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status !== 200) {                
                 setErrorMessage(response.message);
                 setFunctionTable(false);
             } else {
-                const response = await request.json();
                 setSuccessMessage(response.message);
                 // Remove the granted function from the list
                 setAvailableFunctionList(prev => prev.filter(func => func.functionId !== functionId));
@@ -169,7 +163,7 @@ export default function GrantAuthority({ onCancel }) {
                 }
             }
         } catch (Error) {
-            setErrorMessage("Un-expected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setGrantSpinner(false);
             setGrantingId(null);

@@ -4,7 +4,7 @@ import Spinner from '@/app/Spinner/page'
 import { useState } from 'react';
 import ErrorMessage from '@/app/Messages/ErrorMessage/page';
 
-export default function Voucher() {
+export default function PrintVoucherAndLetters() {
     //Define base url;
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -31,8 +31,8 @@ export default function Voucher() {
                     credentials: "include"
                 }
             );
-            if (request.ok) {
-                const response = await request.json();
+            const response = await request.json();
+            if (request.status === 200) {                
                 const data = response.responseObject || [];
                 setSheetData(data);
                 setSheetDataTable(true);
@@ -44,12 +44,11 @@ export default function Voucher() {
                 }, 0);
                 setTotalAmount(total);
             } else {
-                const response = await request.json();
-                setErrorMessage(response.message || "Failed to load transfer data");
+                setErrorMessage(response.message);
                 setSheetDataTable(false);
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
             setSheetDataTable(false);
         } finally {
             setViewSpinner(false);

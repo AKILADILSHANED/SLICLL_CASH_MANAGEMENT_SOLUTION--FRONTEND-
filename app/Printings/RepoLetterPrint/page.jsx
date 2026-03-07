@@ -5,33 +5,87 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import Spinner from '@/app/Spinner/page';
 
+/**
+ * @typedef {Object} RepoInvestment
+ * @property {string|number} repoId - The unique identifier for the repo investment
+ * @property {string} accountNumber - The bank account number associated with the repo
+ * @property {string} repoType - The type of repo investment (Par, Non-Par, TR, Excess, etc.)
+ * @property {string|number} investmentValue - The monetary value of the investment
+ * @property {string} repoDate - The date of the repo investment
+ * @property {string} [additionalDetails] - Any additional details about the repo (optional)
+ */
+
 export default function RepoLetterPrint() {
     //Define base url;
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-    //Define state variables
-    const [repoList, setRepoList] = useState([]);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loadingStatus, setLoadingStatus] = useState(false);
-    const [totalRepos, setTotalRepos] = useState(0);
-    const [totalInvestment, setTotalInvestment] = useState(0);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [filteredRepos, setFilteredRepos] = useState([]);
+    /**
+     * @typedef {Object} StateVariables
+     * @property {RepoInvestment[]} repoList - Array of all repo investments
+     * @property {string} errorMessage - Error message to display
+     * @property {boolean} loadingStatus - Loading state indicator
+     * @property {number} totalRepos - Total number of repos
+     * @property {number} totalInvestment - Total investment value sum
+     * @property {string} searchTerm - Search term for filtering
+     * @property {RepoInvestment[]} filteredRepos - Filtered array of repos based on search
+     * @property {string} selectedDate - Selected date in YYYY-MM-DD format
+     * @property {string} displayDate - Formatted date for display
+     */
 
-    //Define showRepoDetails function;
-    const showRepoDetails = async () => {
+    //Define state variables
+    /** @type {[RepoInvestment[], React.Dispatch<React.SetStateAction<RepoInvestment[]>>]} */
+    const [repoList, setRepoList] = useState([]);
+    
+    /** @type {[string, React.Dispatch<React.SetStateAction<string>>]} */
+    const [errorMessage, setErrorMessage] = useState("");
+    
+    /** @type {[boolean, React.Dispatch<React.SetStateAction<boolean>>]} */
+    const [loadingStatus, setLoadingStatus] = useState(false);
+    
+    /** @type {[number, React.Dispatch<React.SetStateAction<number>>]} */
+    const [totalRepos, setTotalRepos] = useState(0);
+    
+    /** @type {[number, React.Dispatch<React.SetStateAction<number>>]} */
+    const [totalInvestment, setTotalInvestment] = useState(0);
+    
+    /** @type {[string, React.Dispatch<React.SetStateAction<string>>]} */
+    const [searchTerm, setSearchTerm] = useState("");
+    
+    /** @type {[RepoInvestment[], React.Dispatch<React.SetStateAction<RepoInvestment[]>>]} */
+    const [filteredRepos, setFilteredRepos] = useState([]);
+    
+    // New state variables for date selection
+    /** @type {[string, React.Dispatch<React.SetStateAction<string>>]} */
+    const [selectedDate, setSelectedDate] = useState(() => {
+        // Initialize with today's date in YYYY-MM-DD format
+        const today = new Date();
+        return today.toISOString().split('T')[0];
+    });
+    
+    /** @type {[string, React.Dispatch<React.SetStateAction<string>>]} */
+    const [displayDate, setDisplayDate] = useState("");
+
+    /**
+     * Fetches repo details from the server based on selected date
+     * @param {string} date - The date to fetch repos for (YYYY-MM-DD format)
+     * @returns {Promise<void>}
+     */
+    const showRepoDetails = async (date = selectedDate) => {
         setLoadingStatus(true);
         setErrorMessage("");
         try {
             const request = await fetch(
-                `${baseUrl}/api/v1/repo/display-repo-details-for-print`,
+                `${baseUrl}/api/v1/repo/display-repo-details-for-print?repoDate=${date}`,
                 {
                     method: "GET",
                     credentials: "include"
                 }
             );
+            /** @type {{responseObject?: RepoInvestment[], message?: string}} */
             const response = await request.json();
+            
             if (request.status === 200) {
+                /** @type {RepoInvestment[]} */
                 const repos = response.responseObject || [];
                 setRepoList(repos);
                 setFilteredRepos(repos);
@@ -39,24 +93,40 @@ export default function RepoLetterPrint() {
                 
                 // Calculate total investment
                 const total = repos.reduce((sum, repo) => {
-                    return sum + (parseFloat(repo.investmentValue) || 0);
+                    return sum + (parseFloat(String(repo.investmentValue)) || 0);
                 }, 0);
                 setTotalInvestment(total);
-            } else if (request.status === 409) {
-                setErrorMessage(response.message);
+                
+                // Format display date
+                const formattedDate = new Date(date).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                });
+                setDisplayDate(formattedDate);
             } else {
-                setErrorMessage(response.message || "Failed to load repo details");
+                setErrorMessage(response.message || "An error occurred");
             }
         } catch (error) {
-            setErrorMessage("Unexpected error occurred. Please contact administrator!");
+            setErrorMessage("Response not received from server. Please contact administrator!");
         } finally {
             setLoadingStatus(false);
         }
     }
 
+    // Load initial data with today's date
     useEffect(() => {
-        showRepoDetails();
+        showRepoDetails(selectedDate);
     }, []);
+
+    /**
+     * Handles date form submission
+     * @param {React.FormEvent<HTMLFormElement>} e - Form event
+     */
+    const handleDateSubmit = (e) => {
+        e.preventDefault();
+        showRepoDetails(selectedDate);
+    };
 
     // Filter repos based on search term
     useEffect(() => {
@@ -65,8 +135,9 @@ export default function RepoLetterPrint() {
             return;
         }
         
+        /** @type {RepoInvestment[]} */
         const filtered = repoList.filter(repo => 
-            repo.repoId?.toString().includes(searchTerm.toLowerCase()) ||
+            String(repo.repoId)?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             repo.accountNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             repo.repoType?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             repo.repoDate?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -74,7 +145,10 @@ export default function RepoLetterPrint() {
         setFilteredRepos(filtered);
     }, [searchTerm, repoList]);
 
-    //Define repoLetterPrint function;
+    /**
+     * Opens a new tab with the repo letter for printing
+     * @param {string|number} repoId - The ID of the repo to print
+     */
     const repoLetterPrint = async (repoId) => {
         // Open new tab with voucher details
         const newTab = window.open(`/Printings/DisplayRepoLetter?repoId=${repoId}`, '_blank');
@@ -84,14 +158,24 @@ export default function RepoLetterPrint() {
         }
     }
 
+    /**
+     * Formats currency amount
+     * @param {string|number} amount - The amount to format
+     * @returns {string} Formatted currency string
+     */
     const formatCurrency = (amount) => {
-        const number = parseFloat(amount || 0);
+        const number = parseFloat(String(amount || 0));
         return new Intl.NumberFormat('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
         }).format(number);
     };
 
+    /**
+     * Formats date string
+     * @param {string} dateString - The date string to format
+     * @returns {string} Formatted date string
+     */
     const formatDate = (dateString) => {
         if (!dateString) return "N/A";
         try {
@@ -105,33 +189,35 @@ export default function RepoLetterPrint() {
         }
     };
 
+    /**
+     * Returns appropriate badge component based on repo type
+     * @param {string} type - The repo type
+     * @returns {JSX.Element} Badge component
+     */
     const getRepoTypeBadge = (type) => {
-        const typeLower = type?.toLowerCase();
-        if (typeLower.includes('par')) {
-            return (
-                <span className="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 border border-blue-200">
-                    {type}
-                </span>
-            );
-        } else if (typeLower.includes('non') || typeLower.includes('non-par')) {
-            return (
-                <span className="px-2 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 border border-purple-200">
-                    {type}
-                </span>
-            );
-        } else if (typeLower.includes('tr')) {
-            return (
-                <span className="px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 border border-green-200">
-                    {type}
-                </span>
-            );
-        } else if (typeLower.includes('excess')) {
-            return (
-                <span className="px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800 border border-yellow-200">
-                    {type}
-                </span>
-            );
+        const typeLower = type?.toLowerCase() || "";
+        
+        /** @type {Object.<string, {bg: string, text: string, border: string}>} */
+        const typeStyles = {
+            par: { bg: "bg-blue-100", text: "text-blue-800", border: "border-blue-200" },
+            'non-par': { bg: "bg-purple-100", text: "text-purple-800", border: "border-purple-200" },
+            non: { bg: "bg-purple-100", text: "text-purple-800", border: "border-purple-200" },
+            tr: { bg: "bg-green-100", text: "text-green-800", border: "border-green-200" },
+            excess: { bg: "bg-yellow-100", text: "text-yellow-800", border: "border-yellow-200" }
+        };
+
+        // Find matching style
+        for (const [key, style] of Object.entries(typeStyles)) {
+            if (typeLower.includes(key)) {
+                return (
+                    <span className={`px-2 py-1 text-xs font-medium rounded-full ${style.bg} ${style.text} border ${style.border}`}>
+                        {type}
+                    </span>
+                );
+            }
         }
+
+        // Default style
         return (
             <span className="px-2 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-800 border border-gray-200">
                 {type}
@@ -139,8 +225,13 @@ export default function RepoLetterPrint() {
         );
     };
 
+    /**
+     * Refreshes data to today's date
+     */
     const refreshData = () => {
-        showRepoDetails();
+        const today = new Date().toISOString().split('T')[0];
+        setSelectedDate(today);
+        showRepoDetails(today);
         setErrorMessage("");
         setSearchTerm("");
     };
@@ -201,7 +292,7 @@ export default function RepoLetterPrint() {
                                         d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
                                     ></path>
                                 </svg>
-                                <span>Refresh</span>
+                                <span>Today</span>
                             </button>
                         </div>
                     </div>
@@ -224,6 +315,85 @@ export default function RepoLetterPrint() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Date Selection Form */}
+                    <form onSubmit={handleDateSubmit} className="mb-6">
+                        <div className="flex flex-col md:flex-row gap-4 items-end">
+                            <div className="flex-1">
+                                <label htmlFor="repoDate" className="block text-sm font-medium text-gray-700 mb-2">
+                                    Select Repo Date
+                                </label>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <svg 
+                                            className="w-5 h-5 text-gray-400" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24" 
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path 
+                                                strokeLinecap="round" 
+                                                strokeLinejoin="round" 
+                                                strokeWidth="2" 
+                                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                    <input
+                                        type="date"
+                                        id="repoDate"
+                                        value={selectedDate}
+                                        onChange={(e) => setSelectedDate(e.target.value)}
+                                        max={new Date().toISOString().split('T')[0]}
+                                        className="block w-full pl-10 pr-4 py-3 text-sm border border-gray-300 rounded-lg 
+                                                 bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
+                                                 transition-all duration-200 shadow-sm"
+                                        required
+                                    />
+                                </div>
+                                {displayDate && (
+                                    <p className="mt-2 text-sm text-gray-600">
+                                        Showing data for: <span className="font-semibold text-indigo-600">{displayDate}</span>
+                                    </p>
+                                )}
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={loadingStatus}
+                                className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-blue-600 text-white font-medium 
+                                         rounded-lg hover:from-indigo-700 hover:to-blue-700 focus:ring-4 focus:ring-blue-300 
+                                         focus:outline-none transition-all duration-200 transform hover:-translate-y-0.5 
+                                         active:translate-y-0 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed
+                                         disabled:hover:translate-y-0 flex items-center justify-center gap-2 min-w-[120px]"
+                            >
+                                {loadingStatus ? (
+                                    <>
+                                        <Spinner size={20} />
+                                        <span>Loading...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg 
+                                            className="w-5 h-5" 
+                                            fill="none" 
+                                            stroke="currentColor" 
+                                            viewBox="0 0 24 24" 
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path 
+                                                strokeLinecap="round" 
+                                                strokeLinejoin="round" 
+                                                strokeWidth="2" 
+                                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                                            ></path>
+                                        </svg>
+                                        <span>Search</span>
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                    </form>
 
                     {/* Search Bar */}
                     <div className="mb-6">
@@ -278,8 +448,8 @@ export default function RepoLetterPrint() {
                                     Repo Letter Printing Information
                                 </h4>
                                 <p className="text-sm text-indigo-700">
-                                    Select a Repo investment below to generate and print its official letter. 
-                                    
+                                    Select a date above and click Search to view repo investments for that day. 
+                                    Then select a Repo investment below to generate and print its official letter.
                                 </p>
                             </div>
                         </div>
@@ -328,7 +498,7 @@ export default function RepoLetterPrint() {
                                             Repo Investments Available for Printing
                                         </h2>
                                         <p className="text-sm text-gray-600">
-                                            {filteredRepos.length} repos found • Total investment: Rs.{formatCurrency(totalInvestment)}
+                                            {filteredRepos.length} repos found for {displayDate} • Total investment: Rs.{formatCurrency(totalInvestment)}
                                         </p>
                                     </div>
                                 </div>
@@ -362,62 +532,67 @@ export default function RepoLetterPrint() {
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200">
-                                        {filteredRepos.map((item) => (
-                                            <tr
-                                                key={item.repoId}
-                                                className="bg-white border-b border-gray-200 hover:bg-indigo-50 transition-colors duration-150"
-                                            >
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <div className="font-medium text-gray-900 mb-1">
-                                                            {item.repoId}
+                                        {filteredRepos.map((item) => {
+                                            // Destructure item for better IntelliSense
+                                            const { repoId, accountNumber, repoType, investmentValue, repoDate } = item;
+                                            
+                                            return (
+                                                <tr
+                                                    key={String(repoId)}
+                                                    className="bg-white border-b border-gray-200 hover:bg-indigo-50 transition-colors duration-150"
+                                                >
+                                                    <td className="px-6 py-4">
+                                                        <div>
+                                                            <div className="font-medium text-gray-900 mb-1">
+                                                                {String(repoId)}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500">
+                                                                {formatDate(repoDate)}
+                                                            </div>
                                                         </div>
-                                                        <div className="text-xs text-gray-500">
-                                                            {formatDate(item.repoDate)}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <div className="text-sm text-gray-900">
+                                                            {accountNumber}
                                                         </div>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="text-sm text-gray-900">
-                                                        {item.accountNumber}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {getRepoTypeBadge(item.repoType)}
-                                                </td>
-                                                <td className="px-6 py-4 text-right">
-                                                    <div className="text-sm font-semibold text-gray-900">
-                                                        Rs.{formatCurrency(item.investmentValue)}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <button
-                                                        onClick={() => repoLetterPrint(item.repoId)}
-                                                        className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-700 
-                                                                 rounded-lg hover:from-green-700 hover:to-green-800 focus:ring-4 focus:ring-green-300 
-                                                                 focus:outline-none transition-all duration-200 transform hover:-translate-y-0.5 
-                                                                 active:translate-y-0 shadow-md hover:shadow-lg flex items-center justify-center gap-2
-                                                                 min-w-[120px]"
-                                                    >
-                                                        <svg
-                                                            className="w-4 h-4"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                            xmlns="http://www.w3.org/2000/svg"
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        {getRepoTypeBadge(repoType)}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-right">
+                                                        <div className="text-sm font-semibold text-gray-900">
+                                                            Rs.{formatCurrency(investmentValue)}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <button
+                                                            onClick={() => repoLetterPrint(repoId)}
+                                                            className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-green-600 to-green-700 
+                                                                     rounded-lg hover:from-green-700 hover:to-green-800 focus:ring-4 focus:ring-green-300 
+                                                                     focus:outline-none transition-all duration-200 transform hover:-translate-y-0.5 
+                                                                     active:translate-y-0 shadow-md hover:shadow-lg flex items-center justify-center gap-2
+                                                                     min-w-[120px]"
                                                         >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth="2"
-                                                                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                                                            />
-                                                        </svg>
-                                                        <span>Print Letter</span>
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                            <svg
+                                                                className="w-4 h-4"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                viewBox="0 0 24 24"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                    strokeWidth="2"
+                                                                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                                                                />
+                                                            </svg>
+                                                            <span>Print Letter</span>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
@@ -426,7 +601,7 @@ export default function RepoLetterPrint() {
                             <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
                                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                                     <div className="text-sm text-gray-600">
-                                        Displaying <span className="font-semibold">{filteredRepos.length}</span> repository investment{filteredRepos.length !== 1 ? 's' : ''}
+                                        Displaying <span className="font-semibold">{filteredRepos.length}</span> repository investment{filteredRepos.length !== 1 ? 's' : ''} for {displayDate}
                                     </div>
                                     <div className="flex items-center space-x-4">
                                         <div className="text-sm text-gray-600">
@@ -475,17 +650,30 @@ export default function RepoLetterPrint() {
                             <p className="text-gray-600 mb-4">
                                 {searchTerm 
                                     ? 'No repository investments match your search criteria.' 
-                                    : 'No repository investments available for printing.'}
+                                    : `No repository investments available for ${displayDate}.`}
                             </p>
-                            {searchTerm && (
+                            <div className="flex justify-center gap-3">
+                                {searchTerm && (
+                                    <button
+                                        onClick={() => setSearchTerm("")}
+                                        className="px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 
+                                                 rounded-lg transition-all duration-200"
+                                    >
+                                        Clear Search
+                                    </button>
+                                )}
                                 <button
-                                    onClick={() => setSearchTerm("")}
-                                    className="mt-4 px-4 py-2 text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 
+                                    onClick={() => {
+                                        const today = new Date().toISOString().split('T')[0];
+                                        setSelectedDate(today);
+                                        showRepoDetails(today);
+                                    }}
+                                    className="px-4 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 hover:bg-indigo-100 
                                              rounded-lg transition-all duration-200"
                                 >
-                                    Clear Search
+                                    View Today
                                 </button>
-                            )}
+                            </div>
                         </div>
                     </div>
                 ) : null}

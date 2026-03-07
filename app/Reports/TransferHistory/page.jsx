@@ -604,7 +604,7 @@ export default function TransferHistory({ onCancel }) {
                                                 Account Details
                                             </th>
                                             <th scope="col" className="px-6 py-3 font-semibold whitespace-nowrap">
-                                                Repository Info
+                                                Repo Info
                                             </th>
                                             <th scope="col" className="px-6 py-3 font-semibold whitespace-nowrap">
                                                 Status & Initiation
@@ -620,7 +620,7 @@ export default function TransferHistory({ onCancel }) {
                                                 <td className="px-6 py-4">
                                                     <div>
                                                         <div className="font-medium text-gray-900 mb-1">
-                                                            Transfer #{element.transferId}
+                                                            Transfer ID: {element.transferId}
                                                         </div>
                                                         <div className="text-xs text-gray-500">
                                                             {formatDate(element.transferDate)}

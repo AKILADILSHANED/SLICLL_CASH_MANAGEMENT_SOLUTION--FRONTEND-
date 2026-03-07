@@ -36,16 +36,15 @@ function VoucherContent() {
                     }
                 );
 
-                if (request.ok) {
-                    const response = await request.json();
+                const response = await request.json();
+                if (request.status === 200) {                    
                     setVoucherComponent(true);
                     setVoucherData(response.responseObject);
                 } else {
-                    const response = await request.json();
                     setError(response.message);
                 }
             } catch (error) {
-                setError("Unexpected error occurred. Please contact administrator!");
+                setError("Response not received from server. Please contact administrator!");
             } finally {
                 setLoading(false);
             }
@@ -137,13 +136,13 @@ function VoucherContent() {
                                 <div className="flex flex-col bg-cyan-500 p-1 items-center justify-center rounded-t-xl">
                                     <div className="text-white text-5xl font-bold">SLIC</div>
                                     <div className='flex flex-col items-center'>
-                                        <h2 className="text-white text-sm font-semibold">Sri Lanka Insurance</h2>
-                                        <p className="text-white text-sm">Like a father - Like a mother</p>
+                                        <h2 className="text-white text-lg font-semibold">Sri Lanka Insurance</h2>                                        
                                     </div>
                                 </div>
                                 {/* Bottom Red Part */}
                                 <div className="bg-yellow-400 p-1 rounded-b-xl">
-                                    <h2 className="text-white text-3xl font-bold text-center">LIFE</h2>
+                                    <h2 className="text-white text-3xl font-bold text-center ">LIFE</h2>
+                                    <p className="text-white text-sm text-center">Like a father - Like a mother</p>
                                 </div>
                             </div>
 

@@ -579,7 +579,7 @@ export default function RepoReport() {
                                                 <td className="px-6 py-4">
                                                     <div>
                                                         <div className="font-medium text-gray-900 mb-1">
-                                                            Repo #{element.repoId}
+                                                            Repo ID: {element.repoId}
                                                         </div>
                                                         <div className="mt-2">
                                                             {getRepoTypeBadge(element.repoType)}
